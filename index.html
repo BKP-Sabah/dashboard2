@@ -41,6 +41,15 @@
     .official-grid { background-image: radial-gradient(circle at top left, rgba(14,165,233,.14), transparent 28%), radial-gradient(circle at 85% 0%, rgba(16,185,129,.14), transparent 26%), linear-gradient(180deg, #f8fafc 0%, #eef6f7 45%, #f8fafc 100%); }
     .dark .official-grid { background-image: radial-gradient(circle at top left, rgba(56,189,248,.14), transparent 28%), radial-gradient(circle at 85% 0%, rgba(16,185,129,.12), transparent 26%), linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%); }
     .status-dot { width: .65rem; height: .65rem; border-radius: 999px; display: inline-block; }
+
+    /* Betulkan posisi selepas klik menu anchor di header sticky */
+    html { scroll-padding-top: 92px; }
+    #top, section[id] { scroll-margin-top: 92px; }
+    @media (max-width: 640px) {
+      html { scroll-padding-top: 76px; }
+      #top, section[id] { scroll-margin-top: 76px; }
+    }
+
     @media print {
       header, .no-print { display: none !important; }
       body { background: white !important; color: #111827 !important; }
