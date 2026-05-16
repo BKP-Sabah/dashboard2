@@ -836,10 +836,13 @@
         const best = getBestDistrict(kpi);
         const isSelected = idx === activeKpiIndex;
         const scoreWidth = status.score == null ? 0 : Math.max(0, Math.min(status.score, 100));
-        return `<article class="rounded-[1.3rem] border ${isSelected ? 'border-sabahTeal ring-4 ring-cyan-100 dark:ring-cyan-950' : 'border-slate-200 dark:border-slate-800'} bg-slate-50 p-5 transition hover:-translate-y-0.5 hover:shadow-panel dark:bg-slate-900/70">
+        return `<article role="button" tabindex="0" data-index="${idx}" aria-pressed="${isSelected ? 'true' : 'false'}" class="kpi-card rounded-[1.3rem] border p-5 transition hover:-translate-y-0.5 hover:shadow-panel focus:outline-none focus:ring-4 focus:ring-sabahTeal/25 ${isSelected ? 'border-sabahTeal bg-white shadow-panel ring-4 ring-sabahTeal/20 dark:bg-slate-900 dark:ring-sabahTeal/30' : 'cursor-pointer border-slate-200 bg-slate-50 hover:border-sabahTeal hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-sabahTeal'}">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">KPI ${idx + 1}</p>
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-black uppercase tracking-[0.14em] ${isSelected ? 'text-sabahTeal' : 'text-slate-400'}">KPI ${idx + 1}</p>
+                ${isSelected ? '<span class="rounded-full bg-sabahTeal/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-sabahTeal dark:bg-sabahTeal/20">Dipilih</span>' : ''}
+              </div>
               <h3 class="mt-2 min-h-[56px] text-sm font-black leading-6 text-slate-950 dark:text-white">${safeText(kpi.label)}</h3>
             </div>
             <span class="rounded-full border px-3 py-1 text-[11px] font-black ${statusClasses(status.color)}">${safeText(status.label)}</span>
@@ -852,6 +855,23 @@
           <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Daerah terbaik: ${best ? `${safeText(DNAMES[best.code])} (${formatValue(best.value, kpi)})` : '—'}</p>
         </article>`;
       }).join('');
+
+      grid.querySelectorAll('.kpi-card').forEach(card => {
+        const selectCard = () => {
+          activeKpiIndex = Number(card.dataset.index);
+          renderKpiPicker();
+          renderKpiCards();
+          renderCharts();
+          lucide.createIcons();
+        };
+        card.addEventListener('click', selectCard);
+        card.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectCard();
+          }
+        });
+      });
     }
 
     function renderRiskTable() {
