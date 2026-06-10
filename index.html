@@ -1,272 +1,234 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dashboard KPI Cawangan Penjagaan, Bahagian Kesihatan Pergigian Negeri Sabah." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard KPI Cawangan Penjagaan | BKP Sabah</title>
+  <meta name="description" content="Dashboard KPI Cawangan Penjagaan Bahagian Kesihatan Pergigian Negeri Sabah" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          colors: {
-            kkmBlue: '#0B3B75',
-            sabahTeal: '#007C89',
-            executiveNavy: '#0F172A',
-            officialGold: '#C69214'
-          },
-          boxShadow: {
-            soft: '0 18px 55px rgba(15, 23, 42, 0.10)',
-            panel: '0 10px 28px rgba(15, 23, 42, 0.08)'
-          }
-        }
-      }
-    };
+    tailwind = { config: { darkMode: 'class', theme: { extend: { colors: { sabahTeal: '#007C89', sabahBlue: '#0F4C81', sabahGold: '#F5B301' }, boxShadow: { soft: '0 18px 50px rgba(15, 23, 42, 0.10)' } } } } };
   </script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    :root { color-scheme: light; }
-    .glass { background: rgba(255,255,255,.84); backdrop-filter: blur(18px); }
-    .dark .glass { background: rgba(15,23,42,.84); }
-    .official-grid { background-image: radial-gradient(circle at top left, rgba(14,165,233,.14), transparent 28%), radial-gradient(circle at 85% 0%, rgba(16,185,129,.14), transparent 26%), linear-gradient(180deg, #f8fafc 0%, #eef6f7 45%, #f8fafc 100%); }
-    .dark .official-grid { background-image: radial-gradient(circle at top left, rgba(56,189,248,.14), transparent 28%), radial-gradient(circle at 85% 0%, rgba(16,185,129,.12), transparent 26%), linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%); }
-    .status-dot { width: .65rem; height: .65rem; border-radius: 999px; display: inline-block; }
-
-    /* Betulkan posisi selepas klik menu anchor di header sticky */
-    html { scroll-padding-top: 92px; }
-    #top, section[id] { scroll-margin-top: 92px; }
-    @media (max-width: 640px) {
-      html { scroll-padding-top: 76px; }
-      #top, section[id] { scroll-margin-top: 76px; }
-    }
-
+    .glass { backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+    .status-dot { width: .55rem; height: .55rem; border-radius: 9999px; display: inline-block; }
     @media print {
-      header, .no-print { display: none !important; }
-      body { background: white !important; color: #111827 !important; }
-      main { padding: 0 !important; }
-      .print-card { break-inside: avoid; box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+      .no-print { display: none !important; }
+      .print-break { break-before: page; }
+      body { background: white !important; }
+      .shadow-soft, .shadow-lg, .shadow-xl { box-shadow: none !important; }
     }
   </style>
 </head>
 
-<body class="official-grid min-h-screen text-slate-800 antialiased transition-colors duration-300 dark:text-slate-100">
-  <header class="sticky top-0 z-50 border-b border-white/40 bg-white/85 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/85">
-    <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-      <a href="#top" class="flex items-center gap-3">
-        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-kkmBlue to-sabahTeal text-white shadow-panel">
-          <i data-lucide="shield-check" class="h-5 w-5"></i>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-24 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-cyan-300/30 blur-3xl dark:bg-cyan-600/20"></div>
+    <div class="absolute right-0 top-80 h-96 w-96 rounded-full bg-amber-200/30 blur-3xl dark:bg-amber-500/10"></div>
+  </div>
+
+  <header class="sticky top-0 z-40 border-b border-white/60 bg-white/80 glass dark:border-slate-800 dark:bg-slate-950/80 no-print">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <a href="#ringkasan" class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-sabahTeal text-white shadow-lg shadow-cyan-900/10">
+          <i data-lucide="activity" class="h-6 w-6"></i>
         </div>
         <div>
-          <p class="text-sm font-black tracking-tight text-slate-950 dark:text-white">BKP Sabah</p>
-          <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">KPI Cawangan Penjagaan</p>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">BKP Sabah</p>
+          <p class="text-sm font-black sm:text-base">KPI Cawangan Penjagaan</p>
         </div>
       </a>
 
-      <div class="hidden items-center gap-2 lg:flex">
-        <a href="#ringkasan" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Ringkasan</a>
-        <a href="#prestasi" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Prestasi</a>
-        <a href="#trend" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Trend</a>
-        <a href="#risiko" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Keutamaan</a>
-      </div>
+      <nav class="hidden items-center gap-1 rounded-full border border-slate-200 bg-white p-1 text-sm font-bold shadow-sm dark:border-slate-800 dark:bg-slate-900 md:flex">
+        <a class="rounded-full px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="#ringkasan">Ringkasan</a>
+        <a class="rounded-full px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="#prestasi">Prestasi</a>
+        <a class="rounded-full px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="#trend">Trend</a>
+        <a class="rounded-full px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="#keutamaan">Keutamaan</a>
+      </nav>
 
       <div class="flex items-center gap-2">
-        <button id="refreshBtn" type="button" class="no-print hidden rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 sm:inline-flex">
-          <i data-lucide="refresh-cw" class="mr-2 h-4 w-4"></i> Muat Semula
+        <button id="refreshBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-700 shadow-sm hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200" type="button">
+          <i data-lucide="refresh-cw" class="h-4 w-4"></i><span class="hidden sm:inline">Muat Semula</span>
         </button>
-        <button id="printBtn" type="button" class="no-print hidden rounded-2xl bg-kkmBlue px-4 py-2 text-sm font-extrabold text-white shadow-panel hover:-translate-y-0.5 hover:bg-blue-900 sm:inline-flex">
-          <i data-lucide="printer" class="mr-2 h-4 w-4"></i> Cetak
+        <button id="printBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-700 shadow-sm hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200" type="button">
+          <i data-lucide="printer" class="h-4 w-4"></i><span class="hidden sm:inline">Cetak</span>
         </button>
-        <button id="themeToggle" type="button" class="no-print inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-          <i data-lucide="moon" class="h-4 w-4"></i>
-          <span class="sr-only">Tukar mod warna</span>
-        </button>
+        <button id="themeToggle" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200" type="button" aria-label="Tukar mod warna"></button>
       </div>
-    </nav>
+    </div>
   </header>
 
-  <main id="top" class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <section class="print-card overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-950">
-      <div class="grid gap-6 p-6 lg:grid-cols-[1.35fr_.65fr] lg:p-8">
+  <main class="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+    <section id="ringkasan" class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-sabahBlue via-sabahTeal to-cyan-500 p-6 text-white shadow-soft sm:p-8 lg:p-10">
+      <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 20%, white 0, transparent 20%), radial-gradient(circle at 80% 40%, white 0, transparent 24%);"></div>
+      <div class="relative z-10 grid gap-8 lg:grid-cols-[1.45fr_.9fr] lg:items-end">
         <div>
-          <div class="mb-5 flex flex-wrap items-center gap-3">
-            <span id="sourceBadge" class="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-amber-800 dark:border-amber-900/80 dark:bg-amber-950/50 dark:text-amber-200">
-              <span class="status-dot bg-amber-500"></span> Memuatkan data
-            </span>
-            <span id="periodBadge" class="inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">Tempoh: —</span>
+          <div class="flex flex-wrap items-center gap-3">
+            <span id="sourceBadge" class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.14em]"><span class="status-dot bg-amber-300"></span>Memuatkan data</span>
+            <span id="periodBadge" class="rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.14em]">Tempoh: —</span>
           </div>
-          <h1 class="max-w-4xl text-3xl font-black leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">
-            Dashboard KPI <span class="text-sabahTeal dark:text-cyan-300">Cawangan Penjagaan</span> <span class="text-sabahTeal dark:text-white">BKP Sabah</span>
-          </h1>
-          <div class="mt-6 flex flex-wrap gap-3 text-sm font-bold">
-            <a href="#prestasi" class="inline-flex items-center gap-2 rounded-2xl bg-kkmBlue px-5 py-3 text-white shadow-panel hover:-translate-y-0.5 hover:bg-blue-900">Lihat Prestasi <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
-            <a href="#risiko" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">Fokus Keutamaan <i data-lucide="alert-triangle" class="h-4 w-4"></i></a>
+          <h1 class="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">Dashboard KPI Cawangan Penjagaan BKP Sabah</h1>
+          <p class="mt-5 max-w-2xl text-base font-semibold leading-7 text-cyan-50 sm:text-lg">Paparan ringkas prestasi KPI negeri dan kawasan, dengan fokus kepada indikator yang memerlukan tindakan susulan.</p>
+          <div class="mt-8 flex flex-wrap gap-3 no-print">
+            <a href="#prestasi" class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-sabahTeal shadow-lg shadow-cyan-900/20 hover:bg-cyan-50">Lihat Prestasi <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+            <a href="#keutamaan" class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-black text-white hover:bg-white/20">Fokus Keutamaan <i data-lucide="target" class="h-4 w-4"></i></a>
           </div>
         </div>
 
-        <div class="rounded-[1.6rem] bg-gradient-to-br from-slate-950 to-kkmBlue p-6 text-white shadow-panel">
-          <p class="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">Status Data</p>
-          <div class="mt-5 space-y-4">
-            <div class="rounded-3xl bg-white/10 p-4">
-              <p class="text-xs font-semibold text-slate-300">Tarikh kemaskini</p>
-              <p id="updatedText" class="mt-1 text-2xl font-black">—</p>
+        <div class="rounded-[1.75rem] border border-white/20 bg-white/15 p-5 glass">
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Status Data</p>
+          <div class="mt-5 grid grid-cols-2 gap-4">
+            <div class="rounded-3xl bg-white/15 p-4">
+              <p class="text-xs font-bold text-cyan-100">Tarikh kemaskini</p>
+              <p id="updatedText" class="mt-2 text-xl font-black">—</p>
             </div>
-            <div class="rounded-3xl bg-white/10 p-4">
-              <p class="text-xs font-semibold text-slate-300">Sumber data</p>
-              <p id="sourceDetail" class="mt-1 text-sm font-bold leading-5">Sedang memuatkan data daripada Google Sheet...</p>
+            <div class="rounded-3xl bg-white/15 p-4">
+              <p class="text-xs font-bold text-cyan-100">Kategori</p>
+              <p id="sectionCount" class="mt-2 text-xl font-black">—</p>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-              <div class="rounded-3xl bg-white/10 p-4">
-                <p class="text-xs font-semibold text-slate-300">Kategori</p>
-                <p id="sectionCount" class="mt-1 text-2xl font-black">—</p>
-              </div>
-              <div class="rounded-3xl bg-white/10 p-4">
-                <p class="text-xs font-semibold text-slate-300">Indikator</p>
-                <p id="kpiCount" class="mt-1 text-2xl font-black">—</p>
-              </div>
+            <div class="rounded-3xl bg-white/15 p-4">
+              <p class="text-xs font-bold text-cyan-100">Indikator</p>
+              <p id="kpiCount" class="mt-2 text-xl font-black">—</p>
+            </div>
+            <div class="rounded-3xl bg-white/15 p-4">
+              <p class="text-xs font-bold text-cyan-100">Kawasan</p>
+              <p class="mt-2 text-xl font-black">10</p>
             </div>
           </div>
+          <p id="sourceDetail" class="mt-4 text-sm font-semibold leading-6 text-cyan-50">Sedang memuatkan data daripada Google Sheet...</p>
         </div>
       </div>
     </section>
 
-    <div id="dataAlert" class="mt-6 hidden rounded-3xl border p-5 text-sm font-semibold"></div>
+    <div id="dataAlert" class="hidden"></div>
 
-    <section id="ringkasan" class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="flex items-start justify-between gap-3">
-          <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">KPI Mencapai Sasaran</p><p id="achievedCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">—</p></div>
-          <div class="rounded-2xl bg-emerald-100 p-3 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"><i data-lucide="badge-check" class="h-6 w-6"></i></div>
-        </div>
-        <p id="achievedSub" class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">—</p>
+    <section class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center justify-between gap-4"><p class="text-sm font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">KPI Mencapai Sasaran</p><i data-lucide="check-circle-2" class="h-6 w-6 text-emerald-500"></i></div>
+        <p id="achievedCard" class="mt-4 text-4xl font-black tracking-tight">—</p>
+        <p id="achievedSub" class="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">—</p>
       </article>
-      <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="flex items-start justify-between gap-3">
-          <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">Perlu Perhatian</p><p id="attentionCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">—</p></div>
-          <div class="rounded-2xl bg-red-100 p-3 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i data-lucide="siren" class="h-6 w-6"></i></div>
-        </div>
-        <p class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">KPI dengan jurang ketara daripada sasaran</p>
+      <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center justify-between gap-4"><p class="text-sm font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Perlu Perhatian</p><i data-lucide="alert-triangle" class="h-6 w-6 text-red-500"></i></div>
+        <p id="attentionCard" class="mt-4 text-4xl font-black tracking-tight">—</p>
+        <p class="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">KPI dengan jurang ketara daripada sasaran</p>
       </article>
-      <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="flex items-start justify-between gap-3">
-          <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">Purata Pencapaian Negeri</p><p id="avgCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">—</p></div>
-          <div class="rounded-2xl bg-cyan-100 p-3 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300"><i data-lucide="activity" class="h-6 w-6"></i></div>
-        </div>
-        <p class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">Bagi KPI yang mempunyai sasaran sahaja</p>
+      <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center justify-between gap-4"><p class="text-sm font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Purata Pencapaian Negeri</p><i data-lucide="gauge" class="h-6 w-6 text-sabahTeal"></i></div>
+        <p id="avgCard" class="mt-4 text-4xl font-black tracking-tight">—</p>
+        <p class="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">Bagi KPI yang mempunyai sasaran sahaja</p>
       </article>
-      <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="flex items-start justify-between gap-3">
-          <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">Kawasan Dipantau</p><p id="districtCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">10</p></div>
-          <div class="rounded-2xl bg-blue-100 p-3 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"><i data-lucide="map" class="h-6 w-6"></i></div>
-        </div>
-        <p class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400"><span id="districtSub">9 kawasan + 1 ringkasan negeri Sabah</span></p>
+      <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center justify-between gap-4"><p class="text-sm font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Kawasan Dipantau</p><i data-lucide="map-pin" class="h-6 w-6 text-amber-500"></i></div>
+        <p class="mt-4 text-4xl font-black tracking-tight">10</p>
+        <p class="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">9 kawasan + 1 ringkasan negeri Sabah</p>
       </article>
     </section>
 
-    <section id="prestasi" class="mt-8 grid gap-6 lg:grid-cols-[300px_1fr]">
-      <aside class="print-card rounded-[1.6rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="mb-5 flex items-center justify-between gap-3">
-          <div>
-            <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Kategori</p>
-            <h2 class="mt-1 text-lg font-black text-slate-950 dark:text-white">Pilih Program</h2>
-          </div>
-          <i data-lucide="layers-3" class="h-5 w-5 text-slate-400"></i>
-        </div>
-        <div id="sectionTabs" class="space-y-2"></div>
+    <section id="prestasi" class="mt-10 grid gap-6 lg:grid-cols-[280px_1fr]">
+      <aside class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-24 lg:self-start no-print">
+        <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Kategori</p>
+        <h2 class="mt-2 text-xl font-black">Pilih Program</h2>
+        <div id="sectionTabs" class="mt-5 grid gap-2"></div>
       </aside>
 
       <div class="space-y-6">
-        <article class="print-card rounded-[1.6rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-          <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <section class="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Prestasi Semasa</p>
-              <h2 id="activeSectionTitle" class="mt-1 text-2xl font-black text-slate-950 dark:text-white">—</h2>
-              <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Kad KPI dijana secara automatik daripada Google Sheet. Klik mana-mana kad KPI untuk memaparkan perbandingan kawasan dan status terperinci.</p>
+              <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Prestasi Semasa</p>
+              <h2 id="activeSectionTitle" class="mt-2 text-2xl font-black tracking-tight">—</h2>
+              <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">Klik mana-mana kad KPI untuk memaparkan perbandingan kawasan dan status terperinci.</p>
+            </div>
+            <div class="min-w-64">
+              <label for="kpiPicker" class="text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Pilih KPI</label>
+              <select id="kpiPicker" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-sabahTeal focus:ring-4 focus:ring-sabahTeal/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"></select>
             </div>
           </div>
           <div id="kpiCards" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
-        </article>
+        </section>
 
-        <article class="print-card rounded-[1.6rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-          <div class="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
-            <div>
-              <h3 id="districtChartTitle" class="text-xl font-black text-slate-950 dark:text-white">Perbandingan Kawasan</h3>
-              <p id="districtChartSub" class="mt-1 text-sm text-slate-500 dark:text-slate-400">—</p>
+        <section class="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
+          <article class="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Perbandingan Kawasan</p>
+                <h3 id="districtChartTitle" class="mt-2 text-xl font-black">—</h3>
+                <p id="districtChartHint" class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">Pilih KPI untuk graf perbandingan kawasan</p>
+              </div>
             </div>
-            <div id="selectedKpiStatus" class="rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.12em]"></div>
-          </div>
-          <div class="no-print mb-5 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/60">
-            <div class="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <p class="text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Pilih KPI untuk graf perbandingan kawasan</p>
-              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500">Pilihan ini selari dengan KPI card di atas</p>
+            <div class="mt-6 h-[360px]"><canvas id="districtChart"></canvas></div>
+          </article>
+
+          <article class="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Status Kawasan</p>
+            <h3 class="mt-2 text-xl font-black">Senarai Prestasi</h3>
+            <div class="mt-5 max-h-[380px] overflow-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+              <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+                <thead class="sticky top-0 bg-slate-100 text-xs uppercase tracking-wider text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-black">Kawasan</th>
+                    <th class="px-4 py-3 text-right font-black">Nilai</th>
+                    <th class="px-4 py-3 text-left font-black">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="districtTable" class="divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900"></tbody>
+              </table>
             </div>
-            <div id="trendKpiBar" class="flex flex-wrap gap-2"></div>
-          </div>
-          <div class="relative h-[360px]"><canvas id="districtChart"></canvas></div>
-        </article>
+          </article>
+        </section>
       </div>
     </section>
 
-    <section id="trend" class="mt-8 grid gap-6 lg:grid-cols-[1fr_320px]">
-      <article class="print-card rounded-[1.6rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-start">
-          <div>
-            <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Trend Negeri</p>
-            <h2 id="trendTitle" class="mt-1 text-2xl font-black text-slate-950 dark:text-white">Trend KPI</h2>
-            <p id="trendSub" class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Menggunakan tab trend daripada sumber dashboard semasa.</p>
-          </div>
-          <div class="no-print w-full md:w-72">
-            <label for="trendKpiSelect" class="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Pilih KPI Trend Negeri</label>
-            <select id="trendKpiSelect" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-extrabold text-slate-700 outline-none transition focus:border-sabahTeal focus:ring-4 focus:ring-sabahTeal/15 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-              <option value="">Sedang memuatkan data...</option>
-            </select>
-          </div>
+    <section id="trend" class="print-break mt-10 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Trend Negeri</p>
+          <h2 class="mt-2 text-2xl font-black tracking-tight">Trend KPI</h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">Menggunakan tab trend daripada sumber dashboard semasa. Jika tab trend gagal dibaca, sistem akan guna nilai Sabah semasa sebagai fallback.</p>
         </div>
-        <div class="relative h-[360px]"><canvas id="trendChart"></canvas></div>
-      </article>
-
-      <aside class="print-card rounded-[1.6rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Interpretasi</p>
-        <div id="trendInsight" class="mt-5 space-y-4 text-sm leading-6 text-slate-600 dark:text-slate-300"></div>
-      </aside>
+        <div class="min-w-72">
+          <label for="trendKpiSelect" class="text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Pilih KPI Trend Negeri</label>
+          <select id="trendKpiSelect" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-sabahTeal focus:ring-4 focus:ring-sabahTeal/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"></select>
+        </div>
+      </div>
+      <div id="trendKpiBar" class="mt-5 flex gap-2 overflow-x-auto pb-2 no-print"></div>
+      <div class="mt-6 h-[360px]"><canvas id="trendChart"></canvas></div>
+      <div id="trendInterpretation" class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">Interpretasi: —</div>
     </section>
 
-    <section id="risiko" class="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-      <article class="print-card overflow-hidden rounded-[1.6rem] border border-white/70 bg-white shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="border-b border-slate-100 p-5 dark:border-slate-800">
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Keutamaan Tindakan</p>
-          <h2 class="mt-1 text-2xl font-black text-slate-950 dark:text-white">Senarai KPI memerlukan perhatian</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Disusun berdasarkan jurang pencapaian negeri berbanding sasaran. KPI jumlah/bilangan dipaparkan sebagai konteks, bukan prestasi sasaran.</p>
+    <section id="keutamaan" class="print-break mt-10 grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
+      <article class="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-6">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">Keutamaan Tindakan</p>
+          <h2 class="mt-2 text-2xl font-black tracking-tight">Senarai KPI memerlukan perhatian</h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">Kategori dikumpulkan supaya tidak berulang. Susunan #1–#12 masih mengikut jurang pencapaian negeri berbanding sasaran.</p>
         </div>
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-slate-100 text-sm dark:divide-slate-800">
-            <thead class="bg-slate-50 text-xs uppercase tracking-[0.12em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+          <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+            <thead class="bg-slate-100 text-xs uppercase tracking-wider text-slate-500 dark:bg-slate-950 dark:text-slate-400">
               <tr>
                 <th class="px-5 py-4 text-left font-black">Bil.</th>
                 <th class="px-5 py-4 text-left font-black">KPI</th>
                 <th class="px-5 py-4 text-right font-black">Sabah</th>
                 <th class="px-5 py-4 text-right font-black">Sasaran</th>
                 <th class="px-5 py-4 text-left font-black">Status</th>
+                <th class="px-5 py-4 text-left font-black">Cadangan</th>
               </tr>
             </thead>
-            <tbody id="riskTable" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+            <tbody id="riskTable" class="divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900"></tbody>
           </table>
         </div>
       </article>
 
-      <aside class="print-card rounded-[1.6rem] border border-white/70 bg-slate-950 p-5 text-white shadow-panel dark:border-slate-800">
-        <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">Panduan Interpretasi &amp; Tindakan</p>
-        <h3 class="mt-1 text-xl font-black">Daripada Data Kepada Tindakan</h3>
-        <div class="mt-5 space-y-4 text-sm leading-6 text-slate-300">
+      <aside class="rounded-[1.75rem] bg-slate-950 p-6 text-white shadow-soft dark:border dark:border-slate-800">
+        <p class="text-xs font-black uppercase tracking-[0.16em] text-cyan-300">Panduan Interpretasi & Tindakan</p>
+        <h3 class="mt-2 text-2xl font-black tracking-tight">Daripada Data Kepada Tindakan</h3>
+        <div class="mt-6 space-y-4 text-sm font-semibold leading-6 text-slate-300">
           <p><span class="font-black text-white">1.</span> Semak ringkasan negeri terlebih dahulu: bilangan KPI capai sasaran, KPI perlu perhatian dan tarikh kemas kini data.</p>
           <p><span class="font-black text-white">2.</span> Klik KPI card untuk mengenal pasti kawasan terbaik, kawasan berisiko dan jurang berbanding sasaran.</p>
           <p><span class="font-black text-white">3.</span> Gunakan jadual keutamaan sebagai asas tindakan susulan, perbincangan kawasan dan pemantauan penambahbaikan.</p>
@@ -279,7 +241,7 @@
     </section>
   </main>
 
-  <footer class="mt-10 border-t border-white/60 bg-white/75 py-8 text-center text-sm font-semibold text-slate-500 backdrop-blur dark:border-slate-800 dark:bg-slate-950/75 dark:text-slate-400">
+  <footer class="border-t border-white/60 bg-white/75 py-8 text-center text-sm font-semibold text-slate-500 glass dark:border-slate-800 dark:bg-slate-950/75 dark:text-slate-400">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <p id="lastUpdatedFooter">Tarikh kemaskini: —</p>
       <p class="mt-2">Copyright © Bahagian Kesihatan Pergigian Negeri Sabah. All rights reserved.</p>
@@ -287,906 +249,803 @@
   </footer>
 
   <script>
-    'use strict';
+  'use strict';
 
-    // ================================================================
-    // LIVE DASHBOARD DATA SOURCES — maintained from current live page
-    // ================================================================
-    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQktvvtw-4zR_HmPaTQCtr9A4VqY7nuQZFHmedXayjc42QljPSzuDzTDhIGEjHwinozXV-fWhTpN7JH/pub?gid=1187962454&single=true&output=csv';
-    const TREND_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQktvvtw-4zR_HmPaTQCtr9A4VqY7nuQZFHmedXayjc42QljPSzuDzTDhIGEjHwinozXV-fWhTpN7JH/pub?gid=912084885&single=true&output=csv';
-    const TREND_YEAR_START = 2023;
-    const TREND_YEAR_END = 2026;
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQktvvtw-4zR_HmPaTQCtr9A4VqY7nuQZFHmedXayjc42QljPSzuDzTDhIGEjHwinozXV-fWhTpN7JH/pub?gid=1187962454&single=true&output=csv';
+  const TREND_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQktvvtw-4zR_HmPaTQCtr9A4VqY7nuQZFHmedXayjc42QljPSzuDzTDhIGEjHwinozXV-fWhTpN7JH/pub?gid=912084885&single=true&output=csv';
 
-    const DCOLS = ['KK','SDN','TWU','KGU','KDT','BFT','KB','LD','PP','SBH'];
-    const DISTRICT_COLS = DCOLS.filter(code => code !== 'SBH');
-    const DNAMES = {
-      KK: 'Kota Kinabalu', SDN: 'Sandakan', TWU: 'Tawau', KGU: 'Keningau', KDT: 'Kudat',
-      BFT: 'Beaufort', KB: 'Kota Belud', LD: 'Lahad Datu', PP: 'Penampang', SBH: 'Sabah'
-    };
+  const TREND_YEAR_START = 2023;
+  const TREND_YEAR_END = 2026;
+  const DCOLS = ['KK', 'SDN', 'TWU', 'KGU', 'KDT', 'BFT', 'KB', 'LD', 'PP', 'SBH'];
+  const DISTRICT_COLS = DCOLS.filter(code => code !== 'SBH');
+  const DNAMES = {
+    KK: 'Kota Kinabalu', SDN: 'Sandakan', TWU: 'Tawau', KGU: 'Keningau', KDT: 'Kudat',
+    BFT: 'Beaufort', KB: 'Kota Belud', LD: 'Lahad Datu', PP: 'Penampang', SBH: 'Sabah'
+  };
 
-    let SECTIONS = [];
-    let TREND_ROWS = [];
-    let PERIOD = '';
-    let LAST_UPDATED = '';
-    let activeSectionId = '';
-    let activeKpiIndex = 0;
-    let districtChart = null;
-    let trendChart = null;
+  let SECTIONS = [];
+  let TREND_ROWS = [];
+  let PERIOD = '';
+  let LAST_UPDATED = '';
+  let activeSectionId = '';
+  let activeKpiIndex = 0;
+  let activeTrendIndex = 0;
+  let districtChart = null;
+  let trendChart = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      setupTheme();
-      setupActions();
-      loadAllData();
-      lucide.createIcons();
-    });
+  document.addEventListener('DOMContentLoaded', function () {
+    setupTheme();
+    setupActions();
+    loadAllData();
+    if (window.lucide) lucide.createIcons();
+  });
 
-    function setupActions() {
-      document.getElementById('refreshBtn').addEventListener('click', loadAllData);
-      document.getElementById('printBtn').addEventListener('click', () => window.print());
+  function setupActions() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    const printBtn = document.getElementById('printBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadAllData);
+    if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+  }
+
+  function setupTheme() {
+    const root = document.documentElement;
+    const saved = localStorage.getItem('bkp-dashboard-theme');
+    if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.classList.add('dark');
     }
 
-    function setupTheme() {
-      const root = document.documentElement;
-      const saved = localStorage.getItem('bkp-dashboard-theme');
-      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) root.classList.add('dark');
+    const updateIcon = function () {
+      const toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+      toggle.innerHTML = root.classList.contains('dark')
+        ? '<i data-lucide="sun" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>'
+        : '<i data-lucide="moon" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>';
+      if (window.lucide) lucide.createIcons();
+    };
 
-      const updateIcon = () => {
-        document.getElementById('themeToggle').innerHTML = root.classList.contains('dark')
-          ? '<i data-lucide="sun" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>'
-          : '<i data-lucide="moon" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>';
-        lucide.createIcons();
-      };
-
-      document.getElementById('themeToggle').addEventListener('click', () => {
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) {
+      toggle.addEventListener('click', function () {
         root.classList.toggle('dark');
         localStorage.setItem('bkp-dashboard-theme', root.classList.contains('dark') ? 'dark' : 'light');
         updateIcon();
         renderCharts();
       });
-      updateIcon();
     }
+    updateIcon();
+  }
 
-    function parseCSV(text) {
-      const rows = [];
-      let row = [];
-      let cell = '';
-      let quoted = false;
+  function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let cell = '';
+    let quoted = false;
 
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const next = text[i + 1];
-        if (char === '"' && quoted && next === '"') { cell += '"'; i++; }
-        else if (char === '"') quoted = !quoted;
-        else if (char === ',' && !quoted) { row.push(cell); cell = ''; }
-        else if ((char === '\n' || char === '\r') && !quoted) {
-          if (char === '\r' && next === '\n') i++;
-          row.push(cell);
-          if (row.some(v => String(v).trim() !== '')) rows.push(row);
-          row = [];
-          cell = '';
-        } else cell += char;
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const next = text[i + 1];
+      if (char === '"' && quoted && next === '"') {
+        cell += '"';
+        i++;
+      } else if (char === '"') {
+        quoted = !quoted;
+      } else if (char === ',' && !quoted) {
+        row.push(cell);
+        cell = '';
+      } else if ((char === '\n' || char === '\r') && !quoted) {
+        if (char === '\r' && next === '\n') i++;
+        row.push(cell);
+        if (row.some(v => String(v).trim() !== '')) rows.push(row);
+        row = [];
+        cell = '';
+      } else {
+        cell += char;
       }
-      row.push(cell);
-      if (row.some(v => String(v).trim() !== '')) rows.push(row);
-      return rows.map(r => r.map((c, i) => i === 0 ? String(c || '') : String(c || '').trim()));
     }
 
-    function parseNum(raw) {
-      if (raw === undefined || raw === null) return NaN;
-      const s = String(raw).replace(/%/g, '').replace(/,/g, '').trim();
-      if (!s) return NaN;
-      return Number(s);
-    }
+    row.push(cell);
+    if (row.some(v => String(v).trim() !== '')) rows.push(row);
+    return rows.map(r => r.map((c, i) => i === 0 ? String(c || '') : String(c || '').trim()));
+  }
 
-    function safeText(value) {
-      return String(value ?? '').replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
-    }
+  function parseNum(raw) {
+    if (raw === undefined || raw === null) return NaN;
+    const s = String(raw).replace(/%/g, '').replace(/,/g, '').trim();
+    if (!s || s === '-' || s === '—') return NaN;
+    return Number(s);
+  }
 
-    function isSectionHeader(label) {
-      if (!label || label.startsWith(' ')) return false;
-      return /^[A-Z\s\/\-()]+$/.test(label) && label.length > 2 && !/\d/.test(label);
-    }
+  function safeText(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[m]));
+  }
 
-    function inferUnitFromLabel(label) {
-      if (/jumlah|bilangan|number|count/i.test(label)) return 'count';
-      if (/purata|mean|dmft|deft|dft|dfx/i.test(label)) return 'mean';
-      if (/%|liputan|kedatangan|selesai|mbk|mbg|tpr|unmet|saringan|gigi/i.test(label)) return 'percent';
-      return 'value';
-    }
+  function isSectionHeader(label) {
+    if (!label || label.startsWith(' ')) return false;
+    return /^[A-Z\s\/\-()]+$/.test(label) && label.length > 2 && !/\d/.test(label);
+  }
 
-    function isLowerBetter(label) {
-      const text = String(label || '');
+  function inferUnitFromLabel(label) {
+    if (/jumlah|bilangan|number|count/i.test(label)) return 'count';
+    if (/purata|mean|dmft|deft|dft|dfx/i.test(label)) return 'mean';
+    if (/%|liputan|kedatangan|selesai|mbk|mbg|tpr|unmet|saringan|gigi|bebas/i.test(label)) return 'percent';
+    return 'value';
+  }
 
-      // KPI seperti "bebas karies", "caries-free" atau "DMFT=0" ialah higher-is-better.
-      if (/bebas\s*karies|caries[-\s]*free|tanpa\s*karies|\b(dmft|deft|dft|dfx)\s*=?\s*0\b/i.test(text)) return false;
+  function isLowerBetter(label) {
+    const text = String(label || '');
+    if (/bebas\s*karies|caries[-\s]*free|tanpa\s*karies|\b(dmft|deft|dft|dfx)\s*=?\s*0\b/i.test(text)) return false;
+    return /purata\s+(skor\s+)?(dmft|deft|dft|dfx)|mean\s+(score\s+)?(dmft|deft|dft|dfx)|\b(dmft|deft|dft)\b|unmet|kerosakan|defaulter|tidak\s+hadir|keciciran|prevalen(si)?\s+karies|kadar\s+karies|pengalaman\s+karies/i.test(text);
+  }
 
-      // Purata DMFT/dmft/deft/dft ialah indikator beban penyakit: semakin rendah semakin baik.
-      return /purata\s+(skor\s+)?(dmft|deft|dft|dfx)|mean\s+(score\s+)?(dmft|deft|dft|dfx)|\b(dmft|deft|dft)\b|unmet|kerosakan|defaulter|tidak\s+hadir|keciciran|prevalen(si)?\s+karies|kadar\s+karies|pengalaman\s+karies/i.test(text);
-    }
+  function directionText(item) {
+    const lower = item && (item.lowerBetter || /lower/i.test(String(item.direction || '')) || isLowerBetter(item.label || ''));
+    if (lower) return 'Semakin rendah semakin baik';
+    if (item && (item.isCount || /context/i.test(String(item.direction || '')))) return 'Konteks jumlah/bilangan';
+    return 'Semakin tinggi semakin baik';
+  }
 
-    function isLowerBetterTrend(row) {
-      return /lower/i.test(String(row?.direction || '')) || isLowerBetter(row?.label || '');
-    }
+  function makeId(text) {
+    return String(text || 'section').toLowerCase().replace(/[\s\/]+/g, '_').replace(/[^a-z0-9_]/g, '').replace(/^_+|_+$/g, '') || 'section';
+  }
 
-    function directionText(item) {
-      const lower = item?.lowerBetter || isLowerBetterTrend(item);
-      if (lower) return 'Semakin rendah semakin baik';
-      if (item?.isCount || /context/i.test(String(item?.direction || ''))) return 'Konteks jumlah/bilangan';
-      return 'Semakin tinggi semakin baik';
-    }
+  function parseSheet(rows) {
+    SECTIONS = [];
+    PERIOD = (rows[1] && rows[1][0] ? rows[1][0] : '').replace(/Suku Tahun:\s*/i, '').trim();
+    LAST_UPDATED = (rows[2] && rows[2][0] ? rows[2][0] : '').replace(/Tarikh Kemaskini:\s*/i, '').trim();
 
-    function parseSheet(rows) {
-      SECTIONS = [];
-      PERIOD = rows[1]?.[0]?.replace(/Suku Tahun:\s*/i, '').trim() || '';
-      LAST_UPDATED = rows[2]?.[0]?.replace(/Tarikh Kemaskini:\s*/i, '').trim() || '';
+    let currentSection = null;
+    let lastKpi = null;
 
-      let currentSection = null;
-      let lastKpi = null;
+    for (let i = 3; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row || !row[0]) continue;
 
-      for (let i = 3; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || !row[0]) continue;
-        const labelRaw = row[0];
-        const label = labelRaw.trim();
-        if (!label || label === 'KPI / Daerah') continue;
+      const labelRaw = row[0];
+      const label = labelRaw.trim();
+      if (!label || label === 'KPI / Daerah') continue;
 
-        if (/^\s*Sasaran/i.test(labelRaw) && lastKpi) {
-          for (let c = 1; c <= DCOLS.length; c++) {
-            const value = parseNum(row[c]);
-            if (Number.isFinite(value)) { lastKpi.target = value; break; }
+      if (/^\s*Sasaran/i.test(labelRaw) && lastKpi) {
+        for (let c = 1; c <= DCOLS.length; c++) {
+          const value = parseNum(row[c]);
+          if (Number.isFinite(value)) {
+            lastKpi.target = value;
+            break;
           }
-          continue;
         }
-
-        if (/^\s{2,}/.test(labelRaw)) continue;
-
-        if (isSectionHeader(label)) {
-          currentSection = {
-            id: label.toLowerCase().replace(/[\s\/]+/g, '_').replace(/[^a-z0-9_]/g, ''),
-            name: label,
-            kpis: []
-          };
-          SECTIONS.push(currentSection);
-          lastKpi = null;
-          continue;
-        }
-
-        if (!currentSection) continue;
-        const values = {};
-        let hasAny = false;
-        DCOLS.forEach((code, idx) => {
-          const value = parseNum(row[idx + 1]);
-          if (Number.isFinite(value)) { values[code] = value; hasAny = true; }
-        });
-        if (!hasAny) continue;
-
-        const kpi = {
-          label,
-          values,
-          target: null,
-          unit: inferUnitFromLabel(label),
-          lowerBetter: isLowerBetter(label),
-          isCount: /jumlah|bilangan|number|count/i.test(label)
-        };
-        currentSection.kpis.push(kpi);
-        lastKpi = kpi;
+        continue;
       }
-    }
 
-    function normHeader(h) {
-      return String(h || '').trim().toLowerCase().replace(/\s+/g, ' ');
-    }
+      if (/^\s{2,}/.test(labelRaw)) continue;
 
-    function makeKpiCode(sectionName, kpiLabel) {
-      const s = String(sectionName || 'TREND').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 14);
-      const k = String(kpiLabel || 'KPI').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 22);
-      return `${s}_${k}`;
-    }
+      if (isSectionHeader(label)) {
+        currentSection = { id: makeId(label), name: label, kpis: [] };
+        SECTIONS.push(currentSection);
+        lastKpi = null;
+        continue;
+      }
 
-    function getYearRange() {
-      const years = [];
-      for (let y = TREND_YEAR_START; y <= TREND_YEAR_END; y++) years.push(String(y));
-      return years;
-    }
+      if (!currentSection) continue;
 
-    function extractYearFromPeriod() {
-      const match = String(PERIOD || '').match(/20\d{2}/g);
-      return match && match.length ? Number(match[match.length - 1]) : TREND_YEAR_END;
-    }
+      const values = {};
+      let hasAny = false;
+      DCOLS.forEach(function (code, idx) {
+        const value = parseNum(row[idx + 1]);
+        if (Number.isFinite(value)) {
+          values[code] = value;
+          hasAny = true;
+        }
+      });
+      if (!hasAny) continue;
 
-    function trendMetaFromKpi(section, kpi) {
-      return {
-        section: section.name,
-        code: makeKpiCode(section.name, kpi.label),
-        label: kpi.label,
-        unit: kpi.unit === 'percent' ? '%' : kpi.unit === 'count' ? 'Count' : kpi.unit === 'mean' ? 'Mean' : 'Value',
-        direction: kpi.lowerBetter ? 'Lower better' : kpi.isCount ? 'Context only' : 'Higher better',
-        target: Number.isFinite(kpi.target) ? kpi.target : '',
-        interpretation: kpi.isCount ? 'Service Volume' : kpi.unit === 'mean' ? 'Disease Burden' : 'Achievement',
-        remarks: '',
-        values: {}
+      const kpi = {
+        label: label,
+        values: values,
+        target: null,
+        unit: inferUnitFromLabel(label),
+        lowerBetter: isLowerBetter(label),
+        isCount: /jumlah|bilangan|number|count/i.test(label)
       };
+      currentSection.kpis.push(kpi);
+      lastKpi = kpi;
     }
+  }
 
-    function buildTrendFromCurrent() {
-      const currentYear = String(extractYearFromPeriod());
-      const years = getYearRange();
-      TREND_ROWS = [];
-      SECTIONS.forEach(section => section.kpis.forEach(kpi => {
+  function normHeader(h) {
+    return String(h || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function getYearRange() {
+    const years = [];
+    for (let y = TREND_YEAR_START; y <= TREND_YEAR_END; y++) years.push(String(y));
+    return years;
+  }
+
+  function extractYearFromPeriod() {
+    const match = String(PERIOD || '').match(/20\d{2}/g);
+    return match && match.length ? Number(match[match.length - 1]) : TREND_YEAR_END;
+  }
+
+  function makeKpiCode(sectionName, kpiLabel) {
+    const s = String(sectionName || 'TREND').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 14);
+    const k = String(kpiLabel || 'KPI').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 22);
+    return s + '_' + k;
+  }
+
+  function trendMetaFromKpi(section, kpi) {
+    return {
+      section: section.name,
+      code: makeKpiCode(section.name, kpi.label),
+      label: kpi.label,
+      unit: kpi.unit === 'percent' ? '%' : kpi.unit === 'count' ? 'Count' : kpi.unit === 'mean' ? 'Mean' : 'Value',
+      direction: kpi.lowerBetter ? 'Lower better' : kpi.isCount ? 'Context only' : 'Higher better',
+      target: Number.isFinite(kpi.target) ? kpi.target : '',
+      interpretation: kpi.isCount ? 'Service Volume' : kpi.unit === 'mean' ? 'Disease Burden' : 'Achievement',
+      remarks: '',
+      values: {}
+    };
+  }
+
+  function buildTrendFromCurrent() {
+    const currentYear = String(extractYearFromPeriod());
+    const years = getYearRange();
+    TREND_ROWS = [];
+    SECTIONS.forEach(function (section) {
+      section.kpis.forEach(function (kpi) {
         const row = trendMetaFromKpi(section, kpi);
         years.forEach(year => row.values[year] = '');
         if (years.includes(currentYear) && Number.isFinite(kpi.values.SBH)) row.values[currentYear] = kpi.values.SBH;
         TREND_ROWS.push(row);
-      }));
-    }
-
-    function parseTrendWide(rows) {
-      const headerIdx = rows.findIndex(r => r.some(c => /kpi\s*code|kpi\s*label|section|kategori|program/i.test(c)));
-      if (headerIdx < 0) return [];
-      const header = rows[headerIdx].map(normHeader);
-      const findCol = names => names.map(normHeader).map(n => header.indexOf(n)).find(i => i >= 0) ?? -1;
-      const iSection = findCol(['Section','Kategori','Program']);
-      const iCode = findCol(['KPI Code','Kod KPI']);
-      const iLabel = findCol(['KPI Label','KPI','Indikator']);
-      const iUnit = findCol(['Unit']);
-      const iDirection = findCol(['Direction','Arah','Trend Direction']);
-      const iTarget = findCol(['Target','Sasaran']);
-      const iInterpretation = findCol(['Interpretation Type','Jenis Interpretasi','Interpretation']);
-      const iRemarks = findCol(['Remarks','Catatan']);
-      const yearCols = [];
-      header.forEach((h, i) => { if (/^20\d{2}$/.test(h)) yearCols.push({year: h, col: i}); });
-      if (iLabel < 0 || !yearCols.length) return [];
-
-      return rows.slice(headerIdx + 1).map(row => {
-        const label = String(row[iLabel] || '').trim();
-        if (!label) return null;
-        const values = {};
-        yearCols.forEach(y => {
-          const v = parseNum(row[y.col]);
-          values[y.year] = Number.isFinite(v) ? v : '';
-        });
-        return {
-          section: iSection >= 0 ? String(row[iSection] || '').trim() : 'TREND',
-          code: iCode >= 0 && row[iCode] ? String(row[iCode]).trim() : makeKpiCode(row[iSection] || 'TREND', label),
-          label,
-          unit: iUnit >= 0 ? String(row[iUnit] || '').trim() : '',
-          direction: isLowerBetter(label) ? 'Lower better' : (iDirection >= 0 ? String(row[iDirection] || '').trim() : 'Higher better'),
-          target: iTarget >= 0 && Number.isFinite(parseNum(row[iTarget])) ? parseNum(row[iTarget]) : '',
-          interpretation: iInterpretation >= 0 ? String(row[iInterpretation] || '').trim() : 'Achievement',
-          remarks: iRemarks >= 0 ? String(row[iRemarks] || '').trim() : '',
-          values
-        };
-      }).filter(Boolean);
-    }
-
-    function parseTrendLong(rows) {
-      const headerIdx = rows.findIndex(r => r.some(c => /^year$/i.test(String(c).trim())) && r.some(c => /^value$/i.test(String(c).trim())));
-      if (headerIdx < 0) return [];
-      const header = rows[headerIdx].map(normHeader);
-      const findCol = names => names.map(normHeader).map(n => header.indexOf(n)).find(i => i >= 0) ?? -1;
-      const iYear = findCol(['Year']);
-      const iSection = findCol(['Section','Kategori','Program']);
-      const iCode = findCol(['KPI Code','Kod KPI']);
-      const iLabel = findCol(['KPI Label','KPI','Indikator']);
-      const iValue = findCol(['Value','Nilai']);
-      const iTarget = findCol(['Target','Sasaran']);
-      const iUnit = findCol(['Unit']);
-      const iDirection = findCol(['Direction','Arah','Trend Direction']);
-      const iInterpretation = findCol(['Interpretation Type','Jenis Interpretasi','Interpretation']);
-      const iRemarks = findCol(['Remarks','Catatan']);
-      if (iYear < 0 || iLabel < 0 || iValue < 0) return [];
-
-      const map = new Map();
-      rows.slice(headerIdx + 1).forEach(row => {
-        const label = String(row[iLabel] || '').trim();
-        const year = String(row[iYear] || '').trim();
-        if (!label || !/^20\d{2}$/.test(year)) return;
-        const section = iSection >= 0 ? String(row[iSection] || '').trim() : 'TREND';
-        const code = iCode >= 0 && row[iCode] ? String(row[iCode]).trim() : makeKpiCode(section, label);
-        if (!map.has(code)) {
-          map.set(code, {
-            section, code, label,
-            unit: iUnit >= 0 ? String(row[iUnit] || '').trim() : '',
-            direction: isLowerBetter(label) ? 'Lower better' : (iDirection >= 0 ? String(row[iDirection] || '').trim() : 'Higher better'),
-            target: iTarget >= 0 && Number.isFinite(parseNum(row[iTarget])) ? parseNum(row[iTarget]) : '',
-            interpretation: iInterpretation >= 0 ? String(row[iInterpretation] || '').trim() : 'Achievement',
-            remarks: iRemarks >= 0 ? String(row[iRemarks] || '').trim() : '',
-            values: {}
-          });
-        }
-        const value = parseNum(row[iValue]);
-        map.get(code).values[year] = Number.isFinite(value) ? value : '';
       });
-      return [...map.values()];
+    });
+  }
+
+  function parseTrendSheet(rows) {
+    const years = getYearRange();
+    const headerIdx = rows.findIndex(r => r.some(c => /kpi\s*code|kpi\s*label|section|kategori|program|indikator|label/i.test(c)) && r.some(c => /^20\d{2}$/.test(String(c).trim())));
+    if (headerIdx < 0) return [];
+
+    const headers = rows[headerIdx].map(normHeader);
+    const findCol = function (patterns) {
+      return headers.findIndex(h => patterns.some(p => p.test(h)));
+    };
+
+    const sectionIdx = findCol([/section/, /kategori/, /program/]);
+    const labelIdx = findCol([/kpi label/, /indikator/, /^label$/, /^kpi$/]);
+    const codeIdx = findCol([/kpi code/, /^code$/, /kod/]);
+    const unitIdx = findCol([/^unit$/, /unit/]);
+    const directionIdx = findCol([/direction/, /arah/, /better/]);
+    const targetIdx = findCol([/target/, /sasaran/]);
+    const interpretationIdx = findCol([/interpretation/, /interpretasi/]);
+    const remarksIdx = findCol([/remarks/, /catatan/]);
+    const yearCols = years.map(year => ({ year, idx: headers.findIndex(h => h === year) })).filter(x => x.idx >= 0);
+
+    if (labelIdx < 0 && codeIdx < 0) return [];
+
+    const out = [];
+    for (let i = headerIdx + 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row) continue;
+      const label = labelIdx >= 0 ? String(row[labelIdx] || '').trim() : String(row[codeIdx] || '').trim();
+      if (!label) continue;
+      const values = {};
+      yearCols.forEach(function (x) {
+        const val = parseNum(row[x.idx]);
+        values[x.year] = Number.isFinite(val) ? val : '';
+      });
+      out.push({
+        section: sectionIdx >= 0 ? String(row[sectionIdx] || '').trim() : '',
+        code: codeIdx >= 0 ? String(row[codeIdx] || '').trim() : makeKpiCode(sectionIdx >= 0 ? row[sectionIdx] : '', label),
+        label: label,
+        unit: unitIdx >= 0 ? String(row[unitIdx] || '').trim() : inferUnitFromLabel(label),
+        direction: directionIdx >= 0 ? String(row[directionIdx] || '').trim() : (isLowerBetter(label) ? 'Lower better' : 'Higher better'),
+        target: targetIdx >= 0 ? parseNum(row[targetIdx]) : '',
+        interpretation: interpretationIdx >= 0 ? String(row[interpretationIdx] || '').trim() : '',
+        remarks: remarksIdx >= 0 ? String(row[remarksIdx] || '').trim() : '',
+        values: values
+      });
     }
+    return out;
+  }
 
-    function parseTrendSectionHeader(rows) {
-      const headerIdx = rows.findIndex(r => /^kpi$/i.test(String(r[0] || '').trim()) && r.some(c => /^20\d{2}$/.test(String(c || '').trim())));
-      if (headerIdx < 0) return [];
-      const header = rows[headerIdx].map(c => String(c || '').trim());
-      const yearCols = [];
-      header.forEach((h, i) => { if (/^20\d{2}$/.test(h)) yearCols.push({year: h, col: i}); });
-      if (!yearCols.length) return [];
+  async function fetchText(url) {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    return response.text();
+  }
 
-      const out = [];
-      let currentSection = '';
-      for (let r = headerIdx + 1; r < rows.length; r++) {
-        const row = rows[r];
-        if (!row || row.every(c => String(c || '').trim() === '')) continue;
-        const label = String(row[0] || '').trim();
-        if (!label || /^nota:/i.test(label)) continue;
-        const hasYearValues = yearCols.some(y => String(row[y.col] || '').trim() !== '');
-        if (isSectionHeader(label) && !hasYearValues) { currentSection = label; continue; }
-        const values = {};
-        yearCols.forEach(y => {
-          const v = parseNum(row[y.col]);
-          values[y.year] = Number.isFinite(v) ? v : '';
-        });
-        const matchingSection = SECTIONS.find(s => s.name.toUpperCase() === currentSection.toUpperCase());
-        const matchingKpi = matchingSection?.kpis.find(k => k.label === label);
-        out.push({
-          section: currentSection,
-          code: makeKpiCode(currentSection, label),
-          label,
-          unit: matchingKpi ? (matchingKpi.unit === 'percent' ? '%' : matchingKpi.unit) : '',
-          direction: (matchingKpi?.lowerBetter || isLowerBetter(label)) ? 'Lower better' : 'Higher better',
-          target: matchingKpi && Number.isFinite(matchingKpi.target) ? matchingKpi.target : '',
-          interpretation: matchingKpi?.isCount ? 'Service Volume' : 'Achievement',
-          remarks: '',
-          values
-        });
-      }
-      return out;
-    }
+  async function loadAllData() {
+    setSourceBadge('loading', 'Sedang memuatkan data langsung');
+    showAlert('', '');
+    try {
+      const mainText = await fetchText(SHEET_CSV_URL);
+      parseSheet(parseCSV(mainText));
+      if (!SECTIONS.length) throw new Error('Struktur data utama tidak dikenali.');
 
-    function parseTrendSheet(rows) {
-      return parseTrendWide(rows).length ? parseTrendWide(rows) : parseTrendSectionHeader(rows).length ? parseTrendSectionHeader(rows) : parseTrendLong(rows);
-    }
-
-    async function fetchText(url) {
-      const response = await fetch(url, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.text();
-    }
-
-    async function loadAllData() {
-      setSourceBadge('loading', 'Sedang memuatkan data langsung');
-      showAlert('', '');
       try {
-        const mainText = await fetchText(SHEET_CSV_URL);
-        parseSheet(parseCSV(mainText));
-        if (!SECTIONS.length) throw new Error('Struktur data utama tidak dikenali.');
+        const trendText = await fetchText(TREND_CSV_URL);
+        TREND_ROWS = parseTrendSheet(parseCSV(trendText));
+        if (!TREND_ROWS.length) buildTrendFromCurrent();
+      } catch (trendError) {
+        console.warn(trendError);
+        buildTrendFromCurrent();
+        showAlert('warning', 'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Trend sementara menggunakan nilai Sabah semasa sahaja.');
+      }
 
-        try {
-          const trendText = await fetchText(TREND_CSV_URL);
-          const parsedTrend = parseTrendSheet(parseCSV(trendText));
-          TREND_ROWS = parsedTrend.length ? parsedTrend : [];
-          if (!TREND_ROWS.length) buildTrendFromCurrent();
-        } catch (trendError) {
-          console.warn(trendError);
-          buildTrendFromCurrent();
-          showAlert('warning', 'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Trend sementara menggunakan nilai Sabah semasa sahaja.');
-        }
+      activeSectionId = SECTIONS[0] ? SECTIONS[0].id : '';
+      activeKpiIndex = 0;
+      activeTrendIndex = 0;
+      setSourceBadge('connected', 'Google Sheet berjaya disambungkan');
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setSourceBadge('error', 'Sumber data gagal dimuatkan');
+      showAlert('error', 'Dashboard tidak dapat memuatkan sumber data langsung. Semak sama ada Google Sheet masih diterbitkan sebagai CSV dan akses awam masih aktif.');
+    }
+  }
 
-        activeSectionId = SECTIONS[0]?.id || '';
+  function setSourceBadge(type, text) {
+    const el = document.getElementById('sourceBadge');
+    const detail = document.getElementById('sourceDetail');
+    const now = new Date().toLocaleString('ms-MY', { dateStyle: 'medium', timeStyle: 'short' });
+    const detailText = {
+      loading: 'Sedang memuatkan data daripada Google Sheet...',
+      connected: 'Disambungkan kepada Google Sheet. Semakan terakhir: ' + now,
+      error: 'Sumber data tidak berjaya dimuatkan. Sila semak tetapan penerbitan CSV.'
+    };
+    if (detail) detail.textContent = detailText[type] || detailText.loading;
+    if (!el) return;
+    const styles = {
+      loading: 'border-white/30 bg-white/15 text-white',
+      connected: 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/80 dark:bg-emerald-950/50 dark:text-emerald-200',
+      error: 'border-red-200 bg-red-50 text-red-800 dark:border-red-900/80 dark:bg-red-950/50 dark:text-red-200'
+    };
+    const dots = { loading: 'bg-amber-300', connected: 'bg-emerald-500', error: 'bg-red-500' };
+    el.className = 'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ' + (styles[type] || styles.loading);
+    el.innerHTML = '<span class="status-dot ' + (dots[type] || dots.loading) + '"></span>' + safeText(text);
+  }
+
+  function showAlert(type, text) {
+    const alert = document.getElementById('dataAlert');
+    if (!alert) return;
+    if (!type || !text) {
+      alert.className = 'hidden';
+      alert.textContent = '';
+      return;
+    }
+    const classes = type === 'error'
+      ? 'border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-100'
+      : 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100';
+    alert.className = 'mt-6 rounded-3xl border p-5 text-sm font-semibold ' + classes;
+    alert.textContent = text;
+  }
+
+  function getAllKpis() {
+    return SECTIONS.flatMap(section => section.kpis.map((kpi, index) => ({ section, kpi, index })));
+  }
+
+  function getActiveSection() {
+    return SECTIONS.find(section => section.id === activeSectionId) || SECTIONS[0] || null;
+  }
+
+  function getActiveKpi() {
+    const section = getActiveSection();
+    if (!section) return null;
+    return section.kpis[activeKpiIndex] || section.kpis[0] || null;
+  }
+
+  function formatValue(value, kpiOrUnit = '') {
+    if (!Number.isFinite(value)) return '—';
+    const unit = typeof kpiOrUnit === 'string' ? kpiOrUnit : (kpiOrUnit ? kpiOrUnit.unit : '');
+    const isMeanScore = unit === 'mean' || /mean/i.test(String(unit));
+    const maxDigits = isMeanScore ? 2 : (Math.abs(value) >= 100 ? 0 : 2);
+    const minDigits = isMeanScore ? 1 : 0;
+    const formatted = value.toLocaleString('en-MY', { maximumFractionDigits: maxDigits, minimumFractionDigits: minDigits });
+    return unit === 'percent' || unit === '%' ? formatted + '%' : formatted;
+  }
+
+  function getStatus(kpi, value = kpi && kpi.values ? kpi.values.SBH : undefined) {
+    if (!kpi || !Number.isFinite(value) || !Number.isFinite(kpi.target)) {
+      return { label: 'Konteks', color: 'slate', score: null, gap: null, severity: 0 };
+    }
+    const target = kpi.target;
+    let achieved = false;
+    let score = 0;
+    const gap = value - target;
+
+    if (kpi.lowerBetter) {
+      achieved = value <= target;
+      score = value === 0 ? 100 : Math.min((target / value) * 100, 100);
+    } else {
+      achieved = value >= target;
+      score = target === 0 ? 100 : Math.min((value / target) * 100, 100);
+    }
+    if (achieved) return { label: 'Capai Sasaran', color: 'emerald', score: score, gap: gap, severity: 0 };
+    const near = score >= 90;
+    const severity = 100 - score;
+    return { label: near ? 'Hampir Capai' : 'Perlu Perhatian', color: near ? 'amber' : 'red', score: score, gap: gap, severity: severity };
+  }
+
+  function statusClasses(color) {
+    const map = {
+      emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-900',
+      amber: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-200 dark:border-amber-900',
+      red: 'bg-red-50 text-red-800 border-red-200 dark:bg-red-950/50 dark:text-red-200 dark:border-red-900',
+      slate: 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700'
+    };
+    return map[color] || map.slate;
+  }
+
+  function getBestDistrict(kpi) {
+    const pairs = DISTRICT_COLS.map(code => ({ code, value: kpi.values[code] })).filter(d => Number.isFinite(d.value));
+    if (!pairs.length) return null;
+    pairs.sort((a, b) => kpi.lowerBetter ? a.value - b.value : b.value - a.value);
+    return pairs[0];
+  }
+
+  function suggestedAction(status, kpi) {
+    if (!kpi || !Number.isFinite(kpi.target)) return 'Paparan konteks sahaja';
+    if (status.color === 'emerald') return 'Kekalkan prestasi dan dokumentasi';
+    if (status.color === 'amber') return 'Pantau rapat sehingga capai sasaran';
+    if (status.color === 'red') return kpi.lowerBetter ? 'Kurangkan nilai melalui intervensi bersasar' : 'Tindakan pembetulan bersasar';
+    return 'Semak kelengkapan data';
+  }
+
+  function renderAll() {
+    renderHeaderStats();
+    renderSummaryCards();
+    renderSectionTabs();
+    renderKpiPicker();
+    renderKpiCards();
+    renderRiskTable();
+    renderTrendKpiBar();
+    renderTrendKpiSelect();
+    renderCharts();
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderHeaderStats() {
+    document.getElementById('periodBadge').textContent = 'Tempoh: ' + (PERIOD || '—');
+    document.getElementById('updatedText').textContent = LAST_UPDATED || '—';
+    document.getElementById('sectionCount').textContent = String(SECTIONS.length || '—');
+    document.getElementById('kpiCount').textContent = String(getAllKpis().length || '—');
+    document.getElementById('lastUpdatedFooter').textContent = 'Tarikh kemaskini: ' + (LAST_UPDATED || '—') + ' | Tempoh: ' + (PERIOD || '—');
+  }
+
+  function renderSummaryCards() {
+    const all = getAllKpis();
+    const assessable = all.filter(item => Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH));
+    const statuses = assessable.map(item => getStatus(item.kpi));
+    const achieved = statuses.filter(s => s.color === 'emerald').length;
+    const attention = statuses.filter(s => s.color === 'red').length;
+    const avg = statuses.length ? statuses.reduce((sum, s) => sum + (s.score || 0), 0) / statuses.length : NaN;
+
+    document.getElementById('achievedCard').textContent = achieved + '/' + (assessable.length || 0);
+    document.getElementById('achievedSub').textContent = assessable.length ? Math.round((achieved / assessable.length) * 100) + '% daripada KPI yang mempunyai sasaran' : 'Tiada KPI bersasaran dibaca';
+    document.getElementById('attentionCard').textContent = String(attention);
+    document.getElementById('avgCard').textContent = Number.isFinite(avg) ? avg.toFixed(0) + '%' : '—';
+  }
+
+  function renderSectionTabs() {
+    const wrap = document.getElementById('sectionTabs');
+    if (!wrap) return;
+    if (!SECTIONS.length) {
+      wrap.innerHTML = '<p class="text-sm font-bold text-slate-500">Tiada kategori dibaca.</p>';
+      return;
+    }
+    wrap.innerHTML = SECTIONS.map(function (section) {
+      const active = section.id === activeSectionId;
+      return '<button type="button" data-id="' + safeText(section.id) + '" class="rounded-2xl border px-4 py-3 text-left text-sm font-black transition ' +
+        (active ? 'border-sabahTeal bg-sabahTeal text-white shadow-sm' : 'border-slate-200 bg-white text-slate-700 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200') + '">' +
+        '<span class="block">' + safeText(section.name) + '</span><span class="mt-1 block text-xs font-bold opacity-70">' + section.kpis.length + ' KPI</span></button>';
+    }).join('');
+    wrap.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activeSectionId = btn.dataset.id;
         activeKpiIndex = 0;
-        setSourceBadge('connected', 'Google Sheet berjaya disambungkan');
         renderAll();
-      } catch (error) {
-        console.error(error);
-        setSourceBadge('error', 'Sumber data gagal dimuatkan');
-        showAlert('error', 'Dashboard tidak dapat memuatkan sumber data langsung. Semak sama ada Google Sheet masih diterbitkan sebagai CSV dan akses awam masih aktif.');
-      }
-    }
-
-    function setSourceBadge(type, text) {
-      const el = document.getElementById('sourceBadge');
-      const detail = document.getElementById('sourceDetail');
-      const now = new Date().toLocaleString('ms-MY', { dateStyle: 'medium', timeStyle: 'short' });
-      const detailText = {
-        loading: 'Sedang memuatkan data daripada Google Sheet...',
-        connected: `Disambungkan kepada Google Sheet. Semakan terakhir: ${now}`,
-        error: 'Sumber data tidak berjaya dimuatkan. Sila semak tetapan penerbitan CSV.'
-      };
-      if (detail) detail.textContent = detailText[type] || detailText.loading;
-      const styles = {
-        loading: 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/80 dark:bg-amber-950/50 dark:text-amber-200',
-        connected: 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/80 dark:bg-emerald-950/50 dark:text-emerald-200',
-        error: 'border-red-200 bg-red-50 text-red-800 dark:border-red-900/80 dark:bg-red-950/50 dark:text-red-200'
-      };
-      const dots = { loading: 'bg-amber-500', connected: 'bg-emerald-500', error: 'bg-red-500' };
-      el.className = `inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ${styles[type] || styles.loading}`;
-      el.innerHTML = `<span class="status-dot ${dots[type] || dots.loading}"></span>${safeText(text)}`;
-    }
-
-    function showAlert(type, text) {
-      const alert = document.getElementById('dataAlert');
-      if (!type || !text) { alert.classList.add('hidden'); alert.textContent = ''; return; }
-      const classes = type === 'error'
-        ? 'border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-100'
-        : 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100';
-      alert.className = `mt-6 rounded-3xl border p-5 text-sm font-semibold ${classes}`;
-      alert.textContent = text;
-      alert.classList.remove('hidden');
-    }
-
-    function getAllKpis() {
-      return SECTIONS.flatMap(section => section.kpis.map((kpi, index) => ({ section, kpi, index })));
-    }
-
-    function getActiveSection() {
-      return SECTIONS.find(section => section.id === activeSectionId) || SECTIONS[0];
-    }
-
-    function getActiveKpi() {
-      const section = getActiveSection();
-      return section?.kpis[activeKpiIndex] || section?.kpis[0] || null;
-    }
-
-    function formatValue(value, kpiOrUnit = '') {
-      if (!Number.isFinite(value)) return '—';
-      const unit = typeof kpiOrUnit === 'string' ? kpiOrUnit : kpiOrUnit?.unit;
-
-      // DMFT / dmft / deft / dft values are mean scores and must show a decimal point.
-      // Examples: 1 -> 1.0, 1.2 -> 1.2, 1.25 -> 1.25
-      const isMeanScore = unit === 'mean';
-      const maxDigits = isMeanScore ? 2 : (Math.abs(value) >= 100 ? 0 : 2);
-      const minDigits = isMeanScore ? 1 : 0;
-
-      const formatted = value.toLocaleString('en-MY', {
-        maximumFractionDigits: maxDigits,
-        minimumFractionDigits: minDigits
       });
-      return unit === 'percent' || unit === '%' ? `${formatted}%` : formatted;
+    });
+  }
+
+  function renderKpiPicker() {
+    const section = getActiveSection();
+    const title = document.getElementById('activeSectionTitle');
+    const select = document.getElementById('kpiPicker');
+    if (title) title.textContent = section ? section.name : '—';
+    if (!select) return;
+    if (!section || !section.kpis.length) {
+      select.innerHTML = '<option>Tiada KPI</option>';
+      return;
     }
-
-    function getStatus(kpi, value = kpi?.values?.SBH) {
-      if (!kpi || !Number.isFinite(value) || !Number.isFinite(kpi.target)) {
-        return { label: 'Konteks', color: 'slate', score: null, gap: null, severity: 0 };
-      }
-      const target = kpi.target;
-      let achieved = false;
-      let score = 0;
-      let gap = value - target;
-
-      if (kpi.lowerBetter) {
-        achieved = value <= target;
-        score = value === 0 ? 100 : Math.min((target / value) * 100, 100);
-      } else {
-        achieved = value >= target;
-        score = target === 0 ? 100 : Math.min((value / target) * 100, 100);
-      }
-
-      if (achieved) return { label: 'Capai Sasaran', color: 'emerald', score, gap, severity: 0 };
-      const near = score >= 90;
-      const severity = 100 - score;
-      return { label: near ? 'Hampir Capai' : 'Perlu Perhatian', color: near ? 'amber' : 'red', score, gap, severity };
-    }
-
-    function statusClasses(color) {
-      const map = {
-        emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-900',
-        amber: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-200 dark:border-amber-900',
-        red: 'bg-red-50 text-red-800 border-red-200 dark:bg-red-950/50 dark:text-red-200 dark:border-red-900',
-        slate: 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700'
-      };
-      return map[color] || map.slate;
-    }
-
-    function getBestDistrict(kpi) {
-      const pairs = DISTRICT_COLS.map(code => ({ code, value: kpi.values[code] })).filter(d => Number.isFinite(d.value));
-      if (!pairs.length) return null;
-      pairs.sort((a, b) => (kpi.lowerBetter || isLowerBetter(kpi.label)) ? a.value - b.value : b.value - a.value);
-      return pairs[0];
-    }
-
-    function renderAll() {
-      renderHeaderStats();
-      renderSummaryCards();
-      renderSectionTabs();
-      renderKpiPicker();
+    select.innerHTML = section.kpis.map(function (kpi, idx) {
+      return '<option value="' + idx + '" ' + (idx === activeKpiIndex ? 'selected' : '') + '>' + safeText(kpi.label) + '</option>';
+    }).join('');
+    select.onchange = function () {
+      activeKpiIndex = Number(select.value);
       renderKpiCards();
-      renderRiskTable();
-      renderTrendKpiBar();
-      renderTrendKpiSelect();
       renderCharts();
-      lucide.createIcons();
+      renderTrendKpiBar();
+      if (window.lucide) lucide.createIcons();
+    };
+  }
+
+  function renderKpiCards() {
+    const section = getActiveSection();
+    const grid = document.getElementById('kpiCards');
+    if (!grid) return;
+    if (!section || !section.kpis.length) {
+      grid.innerHTML = '<p class="text-sm font-bold text-slate-500">Tiada KPI untuk dipaparkan.</p>';
+      return;
     }
 
-    function renderHeaderStats() {
-      document.getElementById('periodBadge').textContent = `Tempoh: ${PERIOD || '—'}`;
-      document.getElementById('updatedText').textContent = LAST_UPDATED || '—';
-      document.getElementById('sectionCount').textContent = SECTIONS.length;
-      document.getElementById('kpiCount').textContent = getAllKpis().length;
-      document.getElementById('lastUpdatedFooter').textContent = `Tarikh kemaskini: ${LAST_UPDATED || '—'} | Tempoh: ${PERIOD || '—'}`;
-    }
+    grid.innerHTML = section.kpis.map(function (kpi, idx) {
+      const status = getStatus(kpi);
+      const active = idx === activeKpiIndex;
+      const sabah = Number.isFinite(kpi.values.SBH) ? formatValue(kpi.values.SBH, kpi) : '—';
+      const target = Number.isFinite(kpi.target) ? formatValue(kpi.target, kpi) : '—';
+      const best = getBestDistrict(kpi);
+      const scoreWidth = Number.isFinite(status.score) ? Math.max(0, Math.min(100, status.score)) : 0;
+      const bar = status.color === 'red' ? 'bg-red-500' : status.color === 'amber' ? 'bg-amber-500' : status.color === 'emerald' ? 'bg-emerald-500' : 'bg-slate-400';
+      return '<article tabindex="0" role="button" data-index="' + idx + '" class="kpi-card cursor-pointer rounded-[1.35rem] border p-5 transition hover:-translate-y-0.5 hover:shadow-soft ' +
+        (active ? 'border-sabahTeal bg-cyan-50 ring-4 ring-sabahTeal/10 dark:bg-cyan-950/20' : 'border-slate-200 bg-white hover:border-sabahTeal dark:border-slate-800 dark:bg-slate-950') + '">' +
+        '<div class="flex items-start justify-between gap-4"><h3 class="line-clamp-3 text-sm font-black leading-6 text-slate-900 dark:text-white">' + safeText(kpi.label) + '</h3>' +
+        '<span class="inline-flex rounded-full border px-3 py-1 text-[11px] font-black ' + statusClasses(status.color) + '">' + safeText(status.label) + '</span></div>' +
+        '<div class="mt-5 grid grid-cols-2 gap-3"><div class="rounded-2xl bg-slate-50 p-3 dark:bg-slate-900"><p class="text-xs font-black uppercase text-slate-500">Sabah</p><p class="mt-1 text-2xl font-black">' + sabah + '</p></div>' +
+        '<div class="rounded-2xl bg-slate-50 p-3 dark:bg-slate-900"><p class="text-xs font-black uppercase text-slate-500">Sasaran</p><p class="mt-1 text-2xl font-black">' + target + '</p></div></div>' +
+        '<div class="mt-4 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-full rounded-full ' + bar + '" style="width:' + scoreWidth + '%"></div></div>' +
+        '<p class="mt-3 text-xs font-black text-sabahTeal dark:text-cyan-300">Interpretasi: ' + safeText(directionText(kpi)) + '</p>' +
+        '<p class="mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">Kawasan terbaik: ' + (best ? safeText(DNAMES[best.code]) + ' (' + formatValue(best.value, kpi) + ')' : '—') + '</p>' +
+        '</article>';
+    }).join('');
 
-    function renderSummaryCards() {
-      const all = getAllKpis();
-      const assessable = all.filter(item => Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH));
-      const statuses = assessable.map(item => getStatus(item.kpi));
-      const achieved = statuses.filter(s => s.color === 'emerald').length;
-      const attention = statuses.filter(s => s.color === 'red').length;
-      const avg = statuses.length ? statuses.reduce((sum, s) => sum + (s.score || 0), 0) / statuses.length : NaN;
-      document.getElementById('achievedCard').textContent = `${achieved}/${assessable.length || 0}`;
-      document.getElementById('achievedSub').textContent = assessable.length ? `${Math.round((achieved / assessable.length) * 100)}% daripada KPI yang mempunyai sasaran` : 'Tiada KPI bersasaran dibaca';
-      document.getElementById('attentionCard').textContent = attention;
-      document.getElementById('avgCard').textContent = Number.isFinite(avg) ? `${avg.toFixed(0)}%` : '—';
-      document.getElementById('districtCard').textContent = `${DISTRICT_COLS.length} + 1`;
-      const districtSub = document.getElementById('districtSub');
-      if (districtSub) districtSub.textContent = `${DISTRICT_COLS.length} kawasan + 1 ringkasan negeri Sabah`;
-    }
-
-    function renderSectionTabs() {
-      const box = document.getElementById('sectionTabs');
-      box.innerHTML = SECTIONS.map(section => {
-        const isActive = section.id === activeSectionId;
-        const assessable = section.kpis.filter(k => Number.isFinite(k.target) && Number.isFinite(k.values.SBH));
-        const red = assessable.filter(k => getStatus(k).color === 'red').length;
-        return `<button type="button" data-section="${safeText(section.id)}" class="section-btn flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-sm font-extrabold transition ${isActive ? 'bg-kkmBlue text-white shadow-panel' : 'border border-slate-200 bg-slate-50 text-slate-700 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200'}">
-          <span>${safeText(section.name)}</span>
-          <span class="rounded-full ${isActive ? 'bg-white/20 text-white' : red ? 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300'} px-2.5 py-1 text-[11px] font-black">${section.kpis.length}</span>
-        </button>`;
-      }).join('');
-      box.querySelectorAll('.section-btn').forEach(btn => btn.addEventListener('click', () => {
-        activeSectionId = btn.dataset.section;
-        activeKpiIndex = 0;
-        renderSectionTabs();
+    grid.querySelectorAll('.kpi-card').forEach(function (card) {
+      const selectCard = function () {
+        activeKpiIndex = Number(card.dataset.index);
         renderKpiPicker();
         renderKpiCards();
         renderTrendKpiBar();
-        renderTrendKpiSelect();
         renderCharts();
-        lucide.createIcons();
-      }));
-    }
-
-    function renderKpiPicker() {
-      const section = getActiveSection();
-      document.getElementById('activeSectionTitle').textContent = section?.name || '—';
-    }
-
-    function renderKpiCards() {
-      const section = getActiveSection();
-      const grid = document.getElementById('kpiCards');
-      if (!section) { grid.innerHTML = ''; return; }
-
-      grid.innerHTML = section.kpis.map((kpi, idx) => {
-        const status = getStatus(kpi);
-        const best = getBestDistrict(kpi);
-        const isSelected = idx === activeKpiIndex;
-        const scoreWidth = status.score == null ? 0 : Math.max(0, Math.min(status.score, 100));
-        return `<article role="button" tabindex="0" data-index="${idx}" aria-pressed="${isSelected ? 'true' : 'false'}" class="kpi-card rounded-[1.3rem] border p-5 transition hover:-translate-y-0.5 hover:shadow-panel focus:outline-none focus:ring-4 focus:ring-sabahTeal/25 ${isSelected ? 'border-sabahTeal bg-white shadow-panel ring-4 ring-sabahTeal/20 dark:bg-slate-900 dark:ring-sabahTeal/30' : 'cursor-pointer border-slate-200 bg-slate-50 hover:border-sabahTeal hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-sabahTeal'}">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <p class="text-xs font-black uppercase tracking-[0.14em] ${isSelected ? 'text-sabahTeal' : 'text-slate-400'}">KPI ${idx + 1}</p>
-                ${isSelected ? '<span class="rounded-full bg-sabahTeal/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-sabahTeal dark:bg-sabahTeal/20">Dipilih</span>' : ''}
-              </div>
-              <h3 class="mt-2 min-h-[56px] text-sm font-black leading-6 text-slate-950 dark:text-white">${safeText(kpi.label)}</h3>
-            </div>
-            <span class="rounded-full border px-3 py-1 text-[11px] font-black ${statusClasses(status.color)}">${safeText(status.label)}</span>
-          </div>
-          <div class="mt-4 grid grid-cols-2 gap-3">
-            <div class="rounded-2xl bg-white p-3 dark:bg-slate-950"><p class="text-[11px] font-bold text-slate-400">Sabah</p><p class="mt-1 text-2xl font-black text-slate-950 dark:text-white">${formatValue(kpi.values.SBH, kpi)}</p></div>
-            <div class="rounded-2xl bg-white p-3 dark:bg-slate-950"><p class="text-[11px] font-bold text-slate-400">Sasaran</p><p class="mt-1 text-2xl font-black text-slate-950 dark:text-white">${Number.isFinite(kpi.target) ? formatValue(kpi.target, kpi) : '—'}</p></div>
-          </div>
-          <div class="mt-4 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-full rounded-full ${status.color === 'red' ? 'bg-red-500' : status.color === 'amber' ? 'bg-amber-500' : status.color === 'emerald' ? 'bg-emerald-500' : 'bg-slate-400'}" style="width:${scoreWidth}%"></div></div>
-          <p class="mt-3 text-xs font-black text-sabahTeal dark:text-cyan-300">Interpretasi: ${safeText(directionText(kpi))}</p>
-          <p class="mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">Kawasan terbaik: ${best ? `${safeText(DNAMES[best.code])} (${formatValue(best.value, kpi)})` : '—'}</p>
-        </article>`;
-      }).join('');
-
-      grid.querySelectorAll('.kpi-card').forEach(card => {
-        const selectCard = () => {
-          activeKpiIndex = Number(card.dataset.index);
-          renderKpiPicker();
-          renderKpiCards();
-          renderTrendKpiBar();
-          renderCharts();
-          lucide.createIcons();
-        };
-        card.addEventListener('click', selectCard);
-        card.addEventListener('keydown', event => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            selectCard();
-          }
-        });
+        if (window.lucide) lucide.createIcons();
+      };
+      card.addEventListener('click', selectCard);
+      card.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectCard();
+        }
       });
+    });
+  }
+
+  function renderRiskTable() {
+    const body = document.getElementById('riskTable');
+    if (!body) return;
+
+    const rows = getAllKpis()
+      .map(item => Object.assign({}, item, { status: getStatus(item.kpi) }))
+      .filter(item => Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH))
+      .sort((a, b) => b.status.severity - a.status.severity)
+      .slice(0, 12)
+      .map((item, idx) => Object.assign({}, item, { priorityRank: idx + 1 }));
+
+    if (!rows.length) {
+      body.innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center font-bold text-slate-500">Tiada KPI bersasaran untuk dipaparkan.</td></tr>';
+      return;
     }
 
-    function suggestedAction(status, kpi) {
-      if (!kpi || !Number.isFinite(kpi.target)) return 'Paparan konteks sahaja';
-      if (status.color === 'emerald') return 'Kekalkan prestasi dan dokumentasi';
-      if (status.color === 'amber') return 'Pantau rapat sehingga capai sasaran';
-      if (status.color === 'red') return kpi.lowerBetter ? 'Kurangkan nilai melalui intervensi bersasar' : 'Tindakan pembetulan bersasar';
-      return 'Semak kelengkapan data';
-    }
-
-    function renderRiskTable() {
-      const body = document.getElementById('riskTable');
-      if (!body) return;
-
-      const rows = getAllKpis()
-        .map(function(item) {
-          return Object.assign({}, item, { status: getStatus(item.kpi) });
-        })
-        .filter(function(item) {
-          return Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH);
-        })
-        .sort(function(a, b) {
-          return b.status.severity - a.status.severity;
-        })
-        .slice(0, 12)
-        .map(function(item, idx) {
-          return Object.assign({}, item, { priorityRank: idx + 1 });
-        });
-
-      if (!rows.length) {
-        body.innerHTML = `
-          <tr>
-            <td colspan="5" class="px-5 py-8 text-center font-bold text-slate-500">
-              Tiada KPI bersasaran untuk dipaparkan.
-            </td>
-          </tr>
-        `;
-        return;
+    const groups = [];
+    rows.forEach(function (item) {
+      const category = item.section && item.section.name ? item.section.name : 'Lain-lain';
+      let group = groups.find(g => g.category === category);
+      if (!group) {
+        group = { category: category, items: [] };
+        groups.push(group);
       }
+      group.items.push(item);
+    });
 
-      const grouped = {};
+    let html = '';
+    groups.forEach(function (group) {
+      html += '<tr class="bg-slate-100/80 dark:bg-slate-950"><td colspan="6" class="px-5 py-3">' +
+        '<div class="flex flex-wrap items-center justify-between gap-2"><span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">' + safeText(group.category) + '</span>' +
+        '<span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">' + group.items.length + ' KPI dalam Top 12</span></div></td></tr>';
 
-      rows.forEach(function(item) {
-        const category = item.section && item.section.name ? item.section.name : 'Lain-lain';
-        if (!grouped[category]) grouped[category] = [];
-        grouped[category].push(item);
+      group.items.forEach(function (item) {
+        html += '<tr class="hover:bg-slate-50 dark:hover:bg-slate-950/70">' +
+          '<td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">#' + item.priorityRank + '</td>' +
+          '<td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">' + safeText(item.kpi.label) + '</td>' +
+          '<td class="px-5 py-4 align-top text-right font-black">' + formatValue(item.kpi.values.SBH, item.kpi) + '</td>' +
+          '<td class="px-5 py-4 align-top text-right font-black">' + formatValue(item.kpi.target, item.kpi) + '</td>' +
+          '<td class="px-5 py-4 align-top whitespace-nowrap"><span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ' + statusClasses(item.status.color) + '">' + safeText(item.status.label) + '</span></td>' +
+          '<td class="px-5 py-4 align-top text-sm font-semibold text-slate-600 dark:text-slate-300">' + safeText(suggestedAction(item.status, item.kpi)) + '</td>' +
+          '</tr>';
       });
+    });
+    body.innerHTML = html;
+  }
 
-      let html = '';
-
-      Object.keys(grouped).forEach(function(category) {
-        const items = grouped[category];
-
-        html += `
-          <tr class="bg-slate-100/80 dark:bg-slate-900">
-            <td colspan="5" class="px-5 py-3">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">
-                  ${safeText(category)}
-                </span>
-                <span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
-                  ${items.length} KPI
-                </span>
-              </div>
-            </td>
-          </tr>
-        `;
-
-        items.forEach(function(item) {
-          html += `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
-              <td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">
-                #${item.priorityRank}
-              </td>
-
-              <td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">
-                ${safeText(item.kpi.label)}
-              </td>
-
-              <td class="px-5 py-4 align-top text-right font-black">
-                ${formatValue(item.kpi.values.SBH, item.kpi)}
-              </td>
-
-              <td class="px-5 py-4 align-top text-right font-black">
-                ${formatValue(item.kpi.target, item.kpi)}
-              </td>
-
-              <td class="px-5 py-4 align-top whitespace-nowrap">
-                <span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ${statusClasses(item.status.color)}">
-                  ${safeText(item.status.label)}
-                </span>
-              </td>
-            </tr>
-          `;
-        });
-      });
-
-      body.innerHTML = html;
+  function renderTrendKpiBar() {
+    const section = getActiveSection();
+    const box = document.getElementById('trendKpiBar');
+    if (!box) return;
+    if (!section || !section.kpis.length) {
+      box.innerHTML = '<p class="text-xs font-bold text-slate-500 dark:text-slate-400">Tiada KPI untuk dipilih.</p>';
+      return;
     }
-
-    function normaliseForMatch(text) {
-      return String(text || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9%]+/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function findTrendRowForActiveKpi() {
-      const section = getActiveSection();
-      const kpi = getActiveKpi();
-      if (!kpi || !TREND_ROWS.length) return TREND_ROWS[0] || null;
-
-      const targetLabel = normaliseForMatch(kpi.label);
-      const targetSection = normaliseForMatch(section?.name || '');
-
-      return TREND_ROWS.find(row => normaliseForMatch(row.label) === targetLabel && normaliseForMatch(row.section) === targetSection)
-        || TREND_ROWS.find(row => normaliseForMatch(row.label) === targetLabel)
-        || TREND_ROWS[0]
-        || null;
-    }
-
-    function renderTrendKpiBar() {
-      const section = getActiveSection();
-      const box = document.getElementById('trendKpiBar');
-      if (!box) return;
-      if (!section || !section.kpis.length) {
-        box.innerHTML = '<p class="text-xs font-bold text-slate-500 dark:text-slate-400">Tiada KPI untuk dipilih.</p>';
-        return;
-      }
-
-      box.innerHTML = section.kpis.map((kpi, idx) => {
-        const active = idx === activeKpiIndex;
-        return `<button type="button" data-index="${idx}" aria-pressed="${active ? 'true' : 'false'}" title="${safeText(kpi.label)}" class="rounded-full border px-4 py-2 text-xs font-black transition focus:outline-none focus:ring-4 focus:ring-sabahTeal/20 ${active ? 'border-sabahTeal bg-sabahTeal text-white shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300'}">KPI ${idx + 1}</button>`;
-      }).join('');
-
-      box.querySelectorAll('button').forEach(button => {
-        button.addEventListener('click', () => {
-          activeKpiIndex = Number(button.dataset.index);
-          renderTrendKpiBar();
-          renderTrendKpiSelect();
-          renderKpiCards();
-          renderCharts();
-          lucide.createIcons();
-        });
-      });
-    }
-
-    function renderTrendKpiSelect() {
-      const section = getActiveSection();
-      const select = document.getElementById('trendKpiSelect');
-      if (!select) return;
-
-      if (!section || !section.kpis.length) {
-        select.innerHTML = '<option value="">Tiada KPI</option>';
-        select.disabled = true;
-        return;
-      }
-
-      select.disabled = false;
-      select.innerHTML = section.kpis.map((kpi, idx) => {
-        const label = `KPI ${idx + 1} - ${kpi.label}`;
-        return `<option value="${idx}" ${idx === activeKpiIndex ? 'selected' : ''}>${safeText(label)}</option>`;
-      }).join('');
-
-      select.onchange = () => {
-        activeKpiIndex = Number(select.value);
-        renderTrendKpiSelect();
+    box.innerHTML = section.kpis.map(function (kpi, idx) {
+      const active = idx === activeKpiIndex;
+      return '<button type="button" data-index="' + idx + '" title="' + safeText(kpi.label) + '" class="rounded-full border px-4 py-2 text-xs font-black transition focus:outline-none focus:ring-4 focus:ring-sabahTeal/20 ' +
+        (active ? 'border-sabahTeal bg-sabahTeal text-white shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300') + '">KPI ' + (idx + 1) + '</button>';
+    }).join('');
+    box.querySelectorAll('button').forEach(function (button) {
+      button.addEventListener('click', function () {
+        activeKpiIndex = Number(button.dataset.index);
         renderTrendKpiBar();
+        renderKpiPicker();
         renderKpiCards();
         renderCharts();
-        lucide.createIcons();
-      };
-    }
+        if (window.lucide) lucide.createIcons();
+      });
+    });
+  }
 
-    function chartColors() {
-      const dark = document.documentElement.classList.contains('dark');
-      return {
-        grid: dark ? 'rgba(148,163,184,.16)' : 'rgba(148,163,184,.28)',
-        text: dark ? '#CBD5E1' : '#475569',
-        bar: dark ? 'rgba(34,211,238,.75)' : 'rgba(0,124,137,.78)',
-        line: '#C69214',
-        success: '#059669',
-        risk: '#DC2626'
-      };
-    }
+  function normaliseForMatch(text) {
+    return String(text || '').toLowerCase().replace(/[^a-z0-9%]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
 
-    function renderCharts() {
-      renderDistrictChart();
+  function findTrendRowForActiveKpi() {
+    const section = getActiveSection();
+    const kpi = getActiveKpi();
+    if (!kpi || !TREND_ROWS.length) return TREND_ROWS[0] || null;
+    const targetLabel = normaliseForMatch(kpi.label);
+    const targetSection = normaliseForMatch(section ? section.name : '');
+    return TREND_ROWS.find(row => normaliseForMatch(row.label) === targetLabel && normaliseForMatch(row.section) === targetSection)
+      || TREND_ROWS.find(row => normaliseForMatch(row.label) === targetLabel)
+      || TREND_ROWS[activeTrendIndex]
+      || TREND_ROWS[0]
+      || null;
+  }
+
+  function renderTrendKpiSelect() {
+    const select = document.getElementById('trendKpiSelect');
+    if (!select) return;
+    if (!TREND_ROWS.length) {
+      select.innerHTML = '<option>Tiada data trend</option>';
+      return;
+    }
+    select.innerHTML = TREND_ROWS.map(function (row, idx) {
+      return '<option value="' + idx + '" ' + (idx === activeTrendIndex ? 'selected' : '') + '>' + safeText((row.section ? row.section + ' — ' : '') + row.label) + '</option>';
+    }).join('');
+    select.onchange = function () {
+      activeTrendIndex = Number(select.value);
       renderTrendChart();
+    };
+  }
+
+  function getChartColors() {
+    const dark = document.documentElement.classList.contains('dark');
+    return {
+      text: dark ? '#E2E8F0' : '#334155',
+      grid: dark ? 'rgba(148, 163, 184, 0.18)' : 'rgba(100, 116, 139, 0.16)',
+      teal: '#007C89',
+      blue: '#0F4C81',
+      amber: '#F5B301'
+    };
+  }
+
+  function renderCharts() {
+    renderDistrictChart();
+    renderTrendChart();
+  }
+
+  function renderDistrictChart() {
+    const kpi = getActiveKpi();
+    const title = document.getElementById('districtChartTitle');
+    const hint = document.getElementById('districtChartHint');
+    const table = document.getElementById('districtTable');
+    if (!kpi) return;
+
+    if (title) title.textContent = kpi.label;
+    if (hint) hint.textContent = 'Interpretasi: ' + directionText(kpi);
+
+    const districts = DCOLS.map(code => ({ code: code, name: DNAMES[code], value: kpi.values[code] })).filter(d => Number.isFinite(d.value));
+    const sorted = districts.slice().sort((a, b) => kpi.lowerBetter ? a.value - b.value : b.value - a.value);
+
+    if (table) {
+      table.innerHTML = sorted.map(function (d) {
+        const status = getStatus(kpi, d.value);
+        return '<tr><td class="px-4 py-3 font-bold">' + safeText(d.name) + '</td>' +
+          '<td class="px-4 py-3 text-right font-black">' + formatValue(d.value, kpi) + '</td>' +
+          '<td class="px-4 py-3"><span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ' + statusClasses(status.color) + '">' + safeText(status.label) + '</span></td></tr>';
+      }).join('');
     }
 
-    function renderDistrictChart() {
-      const kpi = getActiveKpi();
-      const section = getActiveSection();
-      if (!kpi) return;
-      const colors = chartColors();
-      const labels = DISTRICT_COLS.map(code => code);
-      const values = DISTRICT_COLS.map(code => Number.isFinite(kpi.values[code]) ? kpi.values[code] : null);
-      const targetData = Number.isFinite(kpi.target) ? DISTRICT_COLS.map(() => kpi.target) : [];
-      const status = getStatus(kpi);
-
-      document.getElementById('districtChartTitle').textContent = kpi.label;
-      document.getElementById('districtChartSub').textContent = `${section?.name || ''} | Nilai Sabah: ${formatValue(kpi.values.SBH, kpi)} | Sasaran: ${Number.isFinite(kpi.target) ? formatValue(kpi.target, kpi) : 'Tiada'} | ${directionText(kpi)}`;
-      const statusBox = document.getElementById('selectedKpiStatus');
-      statusBox.className = `rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.12em] ${statusClasses(status.color)}`;
-      statusBox.textContent = status.label;
-
-      const ctx = document.getElementById('districtChart');
-      if (districtChart) districtChart.destroy();
-      districtChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Kawasan', data: values, backgroundColor: colors.bar, borderRadius: 10, borderSkipped: false },
-            ...(targetData.length ? [{ label: 'Sasaran', data: targetData, type: 'line', borderColor: colors.line, backgroundColor: colors.line, pointRadius: 0, borderWidth: 3, tension: 0 }] : [])
-          ]
+    const ctx = document.getElementById('districtChart');
+    if (!ctx || !window.Chart) return;
+    if (districtChart) districtChart.destroy();
+    const colors = getChartColors();
+    districtChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: districts.map(d => d.code),
+        datasets: [{
+          label: kpi.label,
+          data: districts.map(d => d.value),
+          backgroundColor: districts.map(d => d.code === 'SBH' ? colors.amber : colors.teal),
+          borderRadius: 10,
+          maxBarThickness: 42
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => formatValue(ctx.parsed.y, kpi) } }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: colors.text, font: { weight: '700' } } },
-            tooltip: { callbacks: { label: item => `${item.dataset.label}: ${formatValue(item.raw, kpi)}` } }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: colors.text, font: { weight: '800' } } },
-            y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { color: colors.text, callback: v => formatValue(v, kpi.unit) } }
-          }
+        scales: {
+          x: { ticks: { color: colors.text, font: { weight: 'bold' } }, grid: { display: false } },
+          y: { ticks: { color: colors.text, callback: value => formatValue(Number(value), kpi) }, grid: { color: colors.grid } }
         }
-      });
-    }
-
-    function renderTrendChart() {
-      if (!TREND_ROWS.length) return;
-      const row = findTrendRowForActiveKpi();
-      if (!row) return;
-      const colors = chartColors();
-      const years = Object.keys(row.values || {}).filter(y => /^20\d{2}$/.test(y)).sort();
-      const values = years.map(y => row.values[y] === '' ? null : Number(row.values[y]));
-      const target = Number.isFinite(Number(row.target)) && row.target !== '' ? Number(row.target) : null;
-      const unit = String(row.unit || '').includes('%') ? '%' : row.unit;
-
-      document.getElementById('trendTitle').textContent = row.label || 'Trend KPI';
-      document.getElementById('trendSub').textContent = `${row.section || 'Trend'} | ${directionText(row)}${target !== null ? ` | Sasaran: ${formatValue(target, unit)}` : ''}`;
-      renderTrendInsight(row, years, values, target, unit);
-
-      const ctx = document.getElementById('trendChart');
-      if (trendChart) trendChart.destroy();
-      trendChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: years,
-          datasets: [
-            { label: 'Nilai', data: values, borderColor: colors.bar, backgroundColor: colors.bar, pointRadius: 5, pointHoverRadius: 7, borderWidth: 4, tension: 0.32, spanGaps: true },
-            ...(target !== null ? [{ label: 'Sasaran', data: years.map(() => target), borderColor: colors.line, backgroundColor: colors.line, pointRadius: 0, borderWidth: 3, borderDash: [8, 6], tension: 0 }] : [])
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: colors.text, font: { weight: '700' } } },
-            tooltip: { callbacks: { label: item => `${item.dataset.label}: ${formatValue(item.raw, unit)}` } }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: colors.text, font: { weight: '800' } } },
-            y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { color: colors.text, callback: v => formatValue(v, unit) } }
-          }
-        }
-      });
-    }
-
-    function renderTrendInsight(row, years, values, target, unit) {
-      const valid = years.map((year, i) => ({ year, value: values[i] })).filter(d => Number.isFinite(d.value));
-      const box = document.getElementById('trendInsight');
-      if (!valid.length) {
-        box.innerHTML = '<p>Tiada nilai trend yang boleh ditafsirkan untuk KPI ini.</p>';
-        return;
       }
-      const first = valid[0];
-      const last = valid[valid.length - 1];
-      const change = last.value - first.value;
-      const lowerBetter = isLowerBetterTrend(row);
-      const improved = lowerBetter ? change <= 0 : change >= 0;
-      const targetStatus = target === null ? 'Sasaran tidak ditetapkan dalam tab trend.' : (lowerBetter ? last.value <= target : last.value >= target) ? 'Nilai terkini mencapai sasaran.' : 'Nilai terkini belum mencapai sasaran.';
-      box.innerHTML = `
-        <div class="rounded-3xl bg-slate-50 p-4 dark:bg-slate-900"><p class="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Perubahan</p><p class="mt-2 font-extrabold">${safeText(first.year)} ke ${safeText(last.year)}: ${change >= 0 ? '+' : ''}${formatValue(change, unit)}</p></div>
-        <div class="rounded-3xl ${improved ? 'bg-emerald-50 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100' : 'bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-100'} p-4"><p class="text-xs font-black uppercase tracking-[0.16em] opacity-70">Arah Trend</p><p class="mt-2 font-extrabold">${improved ? 'Arah trend memberangsangkan.' : 'Arah trend menurun.'}</p></div>
-        <div class="rounded-3xl bg-slate-50 p-4 dark:bg-slate-900"><p class="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Sasaran</p><p class="mt-2 font-extrabold">${safeText(targetStatus)}</p></div>
-      `;
+    });
+  }
+
+  function trendUnit(row) {
+    const unit = String(row && row.unit ? row.unit : '').trim();
+    if (unit === '%' || /percent/i.test(unit)) return 'percent';
+    if (/mean/i.test(unit)) return 'mean';
+    if (/count/i.test(unit)) return 'count';
+    return inferUnitFromLabel(row ? row.label : '');
+  }
+
+  function renderTrendChart() {
+    const row = TREND_ROWS[activeTrendIndex] || findTrendRowForActiveKpi();
+    const ctx = document.getElementById('trendChart');
+    const interpretation = document.getElementById('trendInterpretation');
+    if (!row || !ctx || !window.Chart) return;
+
+    const years = getYearRange();
+    const values = years.map(year => parseNum(row.values ? row.values[year] : ''));
+    const unit = trendUnit(row);
+
+    if (trendChart) trendChart.destroy();
+    const colors = getChartColors();
+    trendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [{
+          label: row.label,
+          data: values.map(v => Number.isFinite(v) ? v : null),
+          borderColor: colors.teal,
+          backgroundColor: 'rgba(0, 124, 137, 0.12)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: colors.text, font: { weight: 'bold' } } },
+          tooltip: { callbacks: { label: c => formatValue(c.parsed.y, unit) } }
+        },
+        scales: {
+          x: { ticks: { color: colors.text, font: { weight: 'bold' } }, grid: { color: colors.grid } },
+          y: { ticks: { color: colors.text, callback: v => formatValue(Number(v), unit) }, grid: { color: colors.grid } }
+        }
+      }
+    });
+
+    if (interpretation) {
+      const finiteValues = values.filter(v => Number.isFinite(v));
+      const latest = finiteValues.length ? finiteValues[finiteValues.length - 1] : NaN;
+      interpretation.textContent = 'Interpretasi: ' + directionText(row) + '. Nilai terkini: ' + (Number.isFinite(latest) ? formatValue(latest, unit) : '—') + (row.target ? '. Sasaran: ' + formatValue(parseNum(row.target), unit) : '') + '.';
     }
+  }
   </script>
 </body>
 </html>
