@@ -251,7 +251,7 @@
           <table class="min-w-full divide-y divide-slate-100 text-sm dark:divide-slate-800">
             <thead class="bg-slate-50 text-xs uppercase tracking-[0.12em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
               <tr>
-                <th class="px-5 py-4 text-left font-black">Kategori</th>
+                <th class="px-5 py-4 text-left font-black">Bil.</th>
                 <th class="px-5 py-4 text-left font-black">KPI</th>
                 <th class="px-5 py-4 text-right font-black">Sabah</th>
                 <th class="px-5 py-4 text-right font-black">Sasaran</th>
@@ -905,14 +905,23 @@
     }
 
     function renderRiskTable() {
-      const rows = getAllKpis()
-        .map(item => ({ ...item, status: getStatus(item.kpi) }))
-        .filter(item => Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH))
-        .sort((a, b) => b.status.severity - a.status.severity)
-        .slice(0, 12)
-        .map((item, idx) => ({ ...item, priorityRank: idx + 1 }));
-
       const body = document.getElementById('riskTable');
+      if (!body) return;
+
+      const rows = getAllKpis()
+        .map(function(item) {
+          return Object.assign({}, item, { status: getStatus(item.kpi) });
+        })
+        .filter(function(item) {
+          return Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH);
+        })
+        .sort(function(a, b) {
+          return b.status.severity - a.status.severity;
+        })
+        .slice(0, 12)
+        .map(function(item, idx) {
+          return Object.assign({}, item, { priorityRank: idx + 1 });
+        });
 
       if (!rows.length) {
         body.innerHTML = `
@@ -920,58 +929,77 @@
             <td colspan="5" class="px-5 py-8 text-center font-bold text-slate-500">
               Tiada KPI bersasaran untuk dipaparkan.
             </td>
-          </tr>`;
+          </tr>
+        `;
         return;
       }
 
-      const grouped = new Map();
+      const grouped = {};
 
-      rows.forEach(item => {
-        const category = item.section?.name || 'Lain-lain';
-        if (!grouped.has(category)) grouped.set(category, []);
-        grouped.get(category).push(item);
+      rows.forEach(function(item) {
+        const category = item.section && item.section.name ? item.section.name : 'Lain-lain';
+        if (!grouped[category]) grouped[category] = [];
+        grouped[category].push(item);
       });
 
-      body.innerHTML = Array.from(grouped.entries()).map(([category, items]) => `
-        <tr class="bg-slate-100/80 dark:bg-slate-900">
-          <td colspan="5" class="px-5 py-3">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">
-                ${safeText(category)}
-              </span>
-              <span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
-                ${items.length} KPI dalam Top 12
-              </span>
-            </div>
-          </td>
-        </tr>
+      let html = '';
 
-        ${items.map(item => `
-          <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
-            <td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">
-              #${item.priorityRank}
-            </td>
+      Object.keys(grouped).forEach(function(category) {
+        const items = grouped[category];
 
-            <td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">
-              ${safeText(item.kpi.label)}
-            </td>
-
-            <td class="px-5 py-4 align-top text-right font-black">
-              ${formatValue(item.kpi.values.SBH, item.kpi)}
-            </td>
-
-            <td class="px-5 py-4 align-top text-right font-black">
-              ${formatValue(item.kpi.target, item.kpi)}
-            </td>
-
-            <td class="px-5 py-4 align-top whitespace-nowrap">
-              <span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ${statusClasses(item.status.color)}">
-                ${safeText(item.status.label)}
-              </span>
+        html += `
+          <tr class="bg-slate-100/80 dark:bg-slate-900">
+            <td colspan="5" class="px-5 py-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">
+                  ${safeText(category)}
+                </span>
+                <span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                  ${items.length} KPI
+                </span>
+              </div>
             </td>
           </tr>
-        `).join('')}
-      `).join('');
+        `;
+
+        items.forEach(function(item) {
+          html += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
+              <td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">
+                #${item.priorityRank}
+              </td>
+
+              <td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">
+                ${safeText(item.kpi.label)}
+              </td>
+
+              <td class="px-5 py-4 align-top text-right font-black">
+                ${formatValue(item.kpi.values.SBH, item.kpi)}
+              </td>
+
+              <td class="px-5 py-4 align-top text-right font-black">
+                ${formatValue(item.kpi.target, item.kpi)}
+              </td>
+
+              <td class="px-5 py-4 align-top whitespace-nowrap">
+                <span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ${statusClasses(item.status.color)}">
+                  ${safeText(item.status.label)}
+                </span>
+              </td>
+            </tr>
+          `;
+        });
+      });
+
+      body.innerHTML = html;
+    }
+
+    function normaliseForMatch(text) {
+      return String(text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9%]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
     }
 
     function findTrendRowForActiveKpi() {
