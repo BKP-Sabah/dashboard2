@@ -280,11 +280,17 @@
     let districtChart = null;
     let trendChart = null;
 
+    function refreshIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.refreshIcons();
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', () => {
       setupTheme();
       setupActions();
       loadAllData();
-      lucide.createIcons();
+      refreshIcons();
     });
 
     function setupActions() {
@@ -301,7 +307,7 @@
         document.getElementById('themeToggle').innerHTML = root.classList.contains('dark')
           ? '<i data-lucide="sun" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>'
           : '<i data-lucide="moon" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>';
-        lucide.createIcons();
+        refreshIcons();
       };
 
       document.getElementById('themeToggle').addEventListener('click', () => {
@@ -763,7 +769,7 @@
       renderTrendKpiBar();
       renderTrendKpiSelect();
       renderCharts();
-      lucide.createIcons();
+      refreshIcons();
     }
 
     function renderHeaderStats() {
@@ -808,7 +814,7 @@
         renderTrendKpiBar();
         renderTrendKpiSelect();
         renderCharts();
-        lucide.createIcons();
+        refreshIcons();
       }));
     }
 
@@ -855,7 +861,7 @@
           renderKpiCards();
           renderTrendKpiBar();
           renderCharts();
-          lucide.createIcons();
+          refreshIcons();
         };
         card.addEventListener('click', selectCard);
         card.addEventListener('keydown', event => {
@@ -913,7 +919,7 @@
           renderTrendKpiSelect();
           renderKpiCards();
           renderCharts();
-          lucide.createIcons();
+          refreshIcons();
         });
       });
     }
@@ -947,7 +953,7 @@
         renderTrendKpiBar();
         renderKpiCards();
         renderCharts();
-        lucide.createIcons();
+        refreshIcons();
       };
     }
 
