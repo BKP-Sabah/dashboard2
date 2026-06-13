@@ -31,8 +31,8 @@
       }
     };
   </script>
-  <script src="https://unpkg.com/lucide@0.468.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root { color-scheme: light; }
@@ -71,6 +71,8 @@
   </style>
 </head>
   
+<script src="single-category-prestasi-trend.js"></script>
+  
 <body class="official-grid min-h-screen text-slate-800 antialiased transition-colors duration-300 dark:text-slate-100">
   <header class="sticky top-0 z-50 border-b border-white/40 bg-white/85 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/85">
     <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
@@ -88,6 +90,7 @@
         <a href="#ringkasan" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Ringkasan</a>
         <a href="#prestasi" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Prestasi</a>
         <a href="#trend" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Trend</a>
+        <a href="#risiko" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Keutamaan</a>
       </div>
 
       <div class="flex items-center gap-2">
@@ -120,6 +123,7 @@
           </h1>
           <div class="mt-6 flex flex-wrap gap-3 text-sm font-bold">
             <a href="#prestasi" class="inline-flex items-center gap-2 rounded-2xl bg-kkmBlue px-5 py-3 text-white shadow-panel hover:-translate-y-0.5 hover:bg-blue-900">Lihat Prestasi <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+            <a href="#risiko" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">Fokus Keutamaan <i data-lucide="alert-triangle" class="h-4 w-4"></i></a>
           </div>
         </div>
 
@@ -151,7 +155,7 @@
 
     <div id="dataAlert" class="mt-6 hidden rounded-3xl border p-5 text-sm font-semibold"></div>
 
-    <section id="ringkasan" class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <section id="ringkasan" class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
         <div class="flex items-start justify-between gap-3">
           <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">KPI Mencapai Sasaran</p><p id="achievedCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">—</p></div>
@@ -165,7 +169,14 @@
           <div class="rounded-2xl bg-red-100 p-3 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i data-lucide="siren" class="h-6 w-6"></i></div>
         </div>
         <p class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">KPI dengan jurang ketara daripada sasaran</p>
-      </article>      
+      </article>
+      <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
+        <div class="flex items-start justify-between gap-3">
+          <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">Purata Pencapaian Negeri</p><p id="avgCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">—</p></div>
+          <div class="rounded-2xl bg-cyan-100 p-3 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300"><i data-lucide="activity" class="h-6 w-6"></i></div>
+        </div>
+        <p class="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">Bagi KPI yang mempunyai sasaran sahaja</p>
+      </article>
       <article class="print-card rounded-[1.5rem] border border-white/70 bg-white p-5 shadow-panel dark:border-slate-800 dark:bg-slate-950">
         <div class="flex items-start justify-between gap-3">
           <div><p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">Kawasan Dipantau</p><p id="districtCard" class="mt-2 text-3xl font-black text-slate-950 dark:text-white">10</p></div>
@@ -243,7 +254,44 @@
 
   </div>
   </section>
-    
+
+    <section id="risiko" class="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
+      <article class="print-card overflow-hidden rounded-[1.6rem] border border-white/70 bg-white shadow-panel dark:border-slate-800 dark:bg-slate-950">
+        <div class="border-b border-slate-100 p-5 dark:border-slate-800">
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Keutamaan Tindakan</p>
+          <h2 class="mt-1 text-2xl font-black text-slate-950 dark:text-white">Senarai KPI memerlukan perhatian</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Disusun berdasarkan jurang pencapaian negeri berbanding sasaran. KPI jumlah/bilangan dipaparkan sebagai konteks, bukan prestasi sasaran.</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-100 text-sm dark:divide-slate-800">
+            <thead class="bg-slate-50 text-xs uppercase tracking-[0.12em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+              <tr>
+                <th class="px-5 py-4 text-left font-black">Bil.</th>
+                <th class="px-5 py-4 text-left font-black">KPI</th>
+                <th class="px-5 py-4 text-right font-black">Sabah</th>
+                <th class="px-5 py-4 text-right font-black">Sasaran</th>
+                <th class="px-5 py-4 text-left font-black">Status</th>
+              </tr>
+            </thead>
+            <tbody id="riskTable" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <aside class="print-card rounded-[1.6rem] border border-white/70 bg-slate-950 p-5 text-white shadow-panel dark:border-slate-800">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">Panduan Interpretasi &amp; Tindakan</p>
+        <h3 class="mt-1 text-xl font-black">Daripada Data Kepada Tindakan</h3>
+        <div class="mt-5 space-y-4 text-sm leading-6 text-slate-300">
+          <p><span class="font-black text-white">1.</span> Semak ringkasan negeri terlebih dahulu: bilangan KPI capai sasaran, KPI perlu perhatian dan tarikh kemas kini data.</p>
+          <p><span class="font-black text-white">2.</span> Klik KPI card untuk mengenal pasti kawasan terbaik, kawasan berisiko dan jurang berbanding sasaran.</p>
+          <p><span class="font-black text-white">3.</span> Gunakan jadual keutamaan sebagai asas tindakan susulan, perbincangan kawasan dan pemantauan penambahbaikan.</p>
+        </div>
+        <div class="mt-6 rounded-3xl bg-white/10 p-4">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-cyan-300">Nota Penting</p>
+          <p class="mt-2 text-sm leading-6 text-slate-300">Tafsiran prestasi perlu mengambil kira konteks operasi, liputan perkhidmatan, kapasiti tenaga kerja, kualiti data dan faktor program setempat.</p>
+        </div>
+      </aside>
+    </section>
   </main>
 
   <footer class="mt-10 border-t border-white/60 bg-white/75 py-8 text-center text-sm font-semibold text-slate-500 backdrop-blur dark:border-slate-800 dark:bg-slate-950/75 dark:text-slate-400">
@@ -280,33 +328,11 @@
     let districtChart = null;
     let trendChart = null;
 
-    function refreshIcons() {
-      try {
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-          window.refreshIcons();
-        }
-      } catch (error) {
-        console.warn('Lucide icons gagal dimuatkan:', error);
-      }
-    }
-    
     document.addEventListener('DOMContentLoaded', () => {
-
-      try {
-        setupTheme();
-      } catch (error) {
-        console.warn('setupTheme gagal:', error);
-      }
-    
-      try {
-        setupActions();
-      } catch (error) {
-        console.warn('setupActions gagal:', error);
-      }
-    
-      loadAllData();    
-      refreshIcons();
-    
+      setupTheme();
+      setupActions();
+      loadAllData();
+      lucide.createIcons();
     });
 
     function setupActions() {
@@ -323,7 +349,7 @@
         document.getElementById('themeToggle').innerHTML = root.classList.contains('dark')
           ? '<i data-lucide="sun" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>'
           : '<i data-lucide="moon" class="h-4 w-4"></i><span class="sr-only">Tukar mod warna</span>';
-        refreshIcons();
+        lucide.createIcons();
       };
 
       document.getElementById('themeToggle').addEventListener('click', () => {
@@ -647,23 +673,16 @@
         if (!SECTIONS.length) throw new Error('Struktur data utama tidak dikenali.');
 
         try {
-        const trendText = await fetchText(TREND_CSV_URL);
-        const parsedTrend = parseTrendSheet(parseCSV(trendText));
-        TREND_ROWS = parsedTrend.length ? parsedTrend : [];
-        if (!TREND_ROWS.length) {
-          showAlert(
-            'warning',
-            'Data utama berjaya dimuatkan, tetapi data trend tidak tersedia. Graf trend tidak dipaparkan.'
-          );
+          const trendText = await fetchText(TREND_CSV_URL);
+          const parsedTrend = parseTrendSheet(parseCSV(trendText));
+          TREND_ROWS = parsedTrend.length ? parsedTrend : [];
+          if (!TREND_ROWS.length) buildTrendFromCurrent();
+        } catch (trendError) {
+          console.warn(trendError);
+          buildTrendFromCurrent();
+          showAlert('warning', 'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Trend sementara menggunakan nilai Sabah semasa sahaja.');
         }
-      } catch (trendError) {
-        console.warn(trendError);
-        TREND_ROWS = [];
-        showAlert(
-          'warning',
-          'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Graf trend tidak dipaparkan.'
-        );
-      }
+
         activeSectionId = SECTIONS[0]?.id || '';
         activeKpiIndex = 0;
         setSourceBadge('connected', 'Google Sheet berjaya disambungkan');
@@ -781,11 +800,12 @@
       renderSummaryCards();
       renderSectionTabs();
       renderKpiPicker();
-      renderKpiCards();      
+      renderKpiCards();
+      renderRiskTable();
       renderTrendKpiBar();
       renderTrendKpiSelect();
       renderCharts();
-      refreshIcons();
+      lucide.createIcons();
     }
 
     function renderHeaderStats() {
@@ -801,10 +821,12 @@
       const assessable = all.filter(item => Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH));
       const statuses = assessable.map(item => getStatus(item.kpi));
       const achieved = statuses.filter(s => s.color === 'emerald').length;
-      const attention = statuses.filter(s => s.color === 'red').length;    
+      const attention = statuses.filter(s => s.color === 'red').length;
+      const avg = statuses.length ? statuses.reduce((sum, s) => sum + (s.score || 0), 0) / statuses.length : NaN;
       document.getElementById('achievedCard').textContent = `${achieved}/${assessable.length || 0}`;
       document.getElementById('achievedSub').textContent = assessable.length ? `${Math.round((achieved / assessable.length) * 100)}% daripada KPI yang mempunyai sasaran` : 'Tiada KPI bersasaran dibaca';
       document.getElementById('attentionCard').textContent = attention;
+      document.getElementById('avgCard').textContent = Number.isFinite(avg) ? `${avg.toFixed(0)}%` : '—';
       document.getElementById('districtCard').textContent = `${DISTRICT_COLS.length} + 1`;
       const districtSub = document.getElementById('districtSub');
       if (districtSub) districtSub.textContent = `${DISTRICT_COLS.length} kawasan + 1 ringkasan negeri Sabah`;
@@ -830,7 +852,7 @@
         renderTrendKpiBar();
         renderTrendKpiSelect();
         renderCharts();
-        refreshIcons();
+        lucide.createIcons();
       }));
     }
 
@@ -866,7 +888,7 @@
           </div>
           <div class="mt-4 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-full rounded-full ${status.color === 'red' ? 'bg-red-500' : status.color === 'amber' ? 'bg-amber-500' : status.color === 'emerald' ? 'bg-emerald-500' : 'bg-slate-400'}" style="width:${scoreWidth}%"></div></div>
           <p class="mt-3 text-xs font-black text-sabahTeal dark:text-cyan-300">Interpretasi: ${safeText(directionText(kpi))}</p>
-          <p class="mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">Nilai terbaik dilaporkan: ${best ? `${safeText(DNAMES[best.code])} (${formatValue(best.value, kpi)})` : '—'}</p>
+          <p class="mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">Kawasan terbaik: ${best ? `${safeText(DNAMES[best.code])} (${formatValue(best.value, kpi)})` : '—'}</p>
         </article>`;
       }).join('');
 
@@ -877,7 +899,7 @@
           renderKpiCards();
           renderTrendKpiBar();
           renderCharts();
-          refreshIcons();
+          lucide.createIcons();
         };
         card.addEventListener('click', selectCard);
         card.addEventListener('keydown', event => {
@@ -889,8 +911,103 @@
       });
     }
 
+    function suggestedAction(status, kpi) {
+      if (!kpi || !Number.isFinite(kpi.target)) return 'Paparan konteks sahaja';
+      if (status.color === 'emerald') return 'Kekalkan prestasi dan dokumentasi';
+      if (status.color === 'amber') return 'Pantau rapat sehingga capai sasaran';
+      if (status.color === 'red') return kpi.lowerBetter ? 'Kurangkan nilai melalui intervensi bersasar' : 'Tindakan pembetulan bersasar';
+      return 'Semak kelengkapan data';
+    }
 
-    
+    function renderRiskTable() {
+      const body = document.getElementById('riskTable');
+      if (!body) return;
+
+      const rows = getAllKpis()
+        .map(function(item) {
+          return Object.assign({}, item, { status: getStatus(item.kpi) });
+        })
+        .filter(function(item) {
+          return Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH);
+        })
+        .sort(function(a, b) {
+          return b.status.severity - a.status.severity;
+        })
+        .slice(0, 12)
+        .map(function(item, idx) {
+          return Object.assign({}, item, { priorityRank: idx + 1 });
+        });
+
+      if (!rows.length) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-5 py-8 text-center font-bold text-slate-500">
+              Tiada KPI bersasaran untuk dipaparkan.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const grouped = {};
+
+      rows.forEach(function(item) {
+        const category = item.section && item.section.name ? item.section.name : 'Lain-lain';
+        if (!grouped[category]) grouped[category] = [];
+        grouped[category].push(item);
+      });
+
+      let html = '';
+
+      Object.keys(grouped).forEach(function(category) {
+        const items = grouped[category];
+
+        html += `
+          <tr class="bg-slate-100/80 dark:bg-slate-900">
+            <td colspan="5" class="px-5 py-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">
+                  ${safeText(category)}
+                </span>
+                <span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                  ${items.length} KPI
+                </span>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        items.forEach(function(item) {
+          html += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
+              <td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">
+                #${item.priorityRank}
+              </td>
+
+              <td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">
+                ${safeText(item.kpi.label)}
+              </td>
+
+              <td class="px-5 py-4 align-top text-right font-black">
+                ${formatValue(item.kpi.values.SBH, item.kpi)}
+              </td>
+
+              <td class="px-5 py-4 align-top text-right font-black">
+                ${formatValue(item.kpi.target, item.kpi)}
+              </td>
+
+              <td class="px-5 py-4 align-top whitespace-nowrap">
+                <span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ${statusClasses(item.status.color)}">
+                  ${safeText(item.status.label)}
+                </span>
+              </td>
+            </tr>
+          `;
+        });
+      });
+
+      body.innerHTML = html;
+    }
 
     function normaliseForMatch(text) {
       return String(text || '')
@@ -935,7 +1052,7 @@
           renderTrendKpiSelect();
           renderKpiCards();
           renderCharts();
-          refreshIcons();
+          lucide.createIcons();
         });
       });
     }
@@ -945,12 +1062,6 @@
       const select = document.getElementById('trendKpiSelect');
       if (!select) return;
 
-      if (!TREND_ROWS.length) {
-        select.innerHTML = '<option value="">Data trend tidak tersedia</option>';
-        select.disabled = true;
-        return;
-      }
-      
       if (!section || !section.kpis.length) {
         select.innerHTML = '<option value="">Tiada KPI</option>';
         select.disabled = true;
@@ -969,7 +1080,7 @@
         renderTrendKpiBar();
         renderKpiCards();
         renderCharts();
-        refreshIcons();
+        lucide.createIcons();
       };
     }
 
@@ -986,12 +1097,8 @@
     }
 
     function renderCharts() {
-      if (typeof Chart === 'undefined') {
-        console.warn('Chart.js tidak dimuatkan. Data dipaparkan tanpa graf.');
-        return;
-      }   
-      renderDistrictChart();    
-      renderTrendChart();    
+      renderDistrictChart();
+      renderTrendChart();
     }
 
     function renderDistrictChart() {
@@ -1036,30 +1143,6 @@
       });
     }
 
-          if (!TREND_ROWS.length) {
-            if (trendChart) {
-              trendChart.destroy();
-              trendChart = null;
-            }
-          
-            const trendTitle = document.getElementById('trendTitle');
-            const trendSub = document.getElementById('trendSub');
-            const trendInsight = document.getElementById('trendInsight');
-          
-            if (trendTitle) trendTitle.textContent = 'Trend KPI';
-            if (trendSub) trendSub.textContent = 'Data trend tidak tersedia untuk dipaparkan.';
-          
-            if (trendInsight) {
-              trendInsight.innerHTML = `
-                <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-                  <p class="font-black">Data trend tidak tersedia</p>
-                  <p class="mt-2 text-sm leading-6">
-                    Tab trend tidak dapat dibaca atau tiada rekod trend yang sah. Graf trend tidak dijana supaya nilai semasa tidak disalah tafsir sebagai trend.
-                  </p>
-                </div>
-              `;
-            }
-    
     function renderTrendChart() {
       if (!TREND_ROWS.length) return;
       const row = findTrendRowForActiveKpi();
