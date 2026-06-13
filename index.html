@@ -625,16 +625,23 @@
         if (!SECTIONS.length) throw new Error('Struktur data utama tidak dikenali.');
 
         try {
-          const trendText = await fetchText(TREND_CSV_URL);
-          const parsedTrend = parseTrendSheet(parseCSV(trendText));
-          TREND_ROWS = parsedTrend.length ? parsedTrend : [];
-          if (!TREND_ROWS.length) buildTrendFromCurrent();
-        } catch (trendError) {
-          console.warn(trendError);
-          buildTrendFromCurrent();
-          showAlert('warning', 'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Trend sementara menggunakan nilai Sabah semasa sahaja.');
+        const trendText = await fetchText(TREND_CSV_URL);
+        const parsedTrend = parseTrendSheet(parseCSV(trendText));
+        TREND_ROWS = parsedTrend.length ? parsedTrend : [];
+        if (!TREND_ROWS.length) {
+          showAlert(
+            'warning',
+            'Data utama berjaya dimuatkan, tetapi data trend tidak tersedia. Graf trend tidak dipaparkan.'
+          );
         }
-
+      } catch (trendError) {
+        console.warn(trendError);
+        TREND_ROWS = [];
+        showAlert(
+          'warning',
+          'Data utama berjaya dimuatkan, tetapi tab trend tidak dapat dibaca. Graf trend tidak dipaparkan.'
+        );
+      }
         activeSectionId = SECTIONS[0]?.id || '';
         activeKpiIndex = 0;
         setSourceBadge('connected', 'Google Sheet berjaya disambungkan');
@@ -916,6 +923,12 @@
       const select = document.getElementById('trendKpiSelect');
       if (!select) return;
 
+      if (!TREND_ROWS.length) {
+        select.innerHTML = '<option value="">Data trend tidak tersedia</option>';
+        select.disabled = true;
+        return;
+      }
+      
       if (!section || !section.kpis.length) {
         select.innerHTML = '<option value="">Tiada KPI</option>';
         select.disabled = true;
@@ -997,6 +1010,30 @@
       });
     }
 
+          if (!TREND_ROWS.length) {
+            if (trendChart) {
+              trendChart.destroy();
+              trendChart = null;
+            }
+          
+            const trendTitle = document.getElementById('trendTitle');
+            const trendSub = document.getElementById('trendSub');
+            const trendInsight = document.getElementById('trendInsight');
+          
+            if (trendTitle) trendTitle.textContent = 'Trend KPI';
+            if (trendSub) trendSub.textContent = 'Data trend tidak tersedia untuk dipaparkan.';
+          
+            if (trendInsight) {
+              trendInsight.innerHTML = `
+                <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+                  <p class="font-black">Data trend tidak tersedia</p>
+                  <p class="mt-2 text-sm leading-6">
+                    Tab trend tidak dapat dibaca atau tiada rekod trend yang sah. Graf trend tidak dijana supaya nilai semasa tidak disalah tafsir sebagai trend.
+                  </p>
+                </div>
+              `;
+            }
+    
     function renderTrendChart() {
       if (!TREND_ROWS.length) return;
       const row = findTrendRowForActiveKpi();
