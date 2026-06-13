@@ -970,6 +970,10 @@
     }
 
     function renderCharts() {
+      if (typeof Chart === 'undefined') {
+        console.warn('Chart.js tidak dimuatkan. Data masih dipaparkan tanpa graf.');
+        return;
+      }
       renderDistrictChart();
       renderTrendChart();
     }
