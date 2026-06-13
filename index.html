@@ -281,16 +281,32 @@
     let trendChart = null;
 
     function refreshIcons() {
-      if (window.lucide && typeof window.lucide.createIcons === 'function') {
-        window.refreshIcons();
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.refreshIcons();
+        }
+      } catch (error) {
+        console.warn('Lucide icons gagal dimuatkan:', error);
       }
     }
     
     document.addEventListener('DOMContentLoaded', () => {
-      setupTheme();
-      setupActions();
-      loadAllData();
+
+      try {
+        setupTheme();
+      } catch (error) {
+        console.warn('setupTheme gagal:', error);
+      }
+    
+      try {
+        setupActions();
+      } catch (error) {
+        console.warn('setupActions gagal:', error);
+      }
+    
+      loadAllData();    
       refreshIcons();
+    
     });
 
     function setupActions() {
@@ -971,11 +987,11 @@
 
     function renderCharts() {
       if (typeof Chart === 'undefined') {
-        console.warn('Chart.js tidak dimuatkan. Data masih dipaparkan tanpa graf.');
+        console.warn('Chart.js tidak dimuatkan. Data dipaparkan tanpa graf.');
         return;
-      }
-      renderDistrictChart();
-      renderTrendChart();
+      }   
+      renderDistrictChart();    
+      renderTrendChart();    
     }
 
     function renderDistrictChart() {
