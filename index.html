@@ -90,7 +90,6 @@
         <a href="#ringkasan" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Ringkasan</a>
         <a href="#prestasi" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Prestasi</a>
         <a href="#trend" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Trend</a>
-        <a href="#risiko" class="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-kkmBlue dark:text-slate-300 dark:hover:bg-slate-900">Keutamaan</a>
       </div>
 
       <div class="flex items-center gap-2">
@@ -123,7 +122,6 @@
           </h1>
           <div class="mt-6 flex flex-wrap gap-3 text-sm font-bold">
             <a href="#prestasi" class="inline-flex items-center gap-2 rounded-2xl bg-kkmBlue px-5 py-3 text-white shadow-panel hover:-translate-y-0.5 hover:bg-blue-900">Lihat Prestasi <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
-            <a href="#risiko" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-sabahTeal hover:text-sabahTeal dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">Fokus Keutamaan <i data-lucide="alert-triangle" class="h-4 w-4"></i></a>
           </div>
         </div>
 
@@ -254,44 +252,7 @@
 
   </div>
   </section>
-
-    <section id="risiko" class="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-      <article class="print-card overflow-hidden rounded-[1.6rem] border border-white/70 bg-white shadow-panel dark:border-slate-800 dark:bg-slate-950">
-        <div class="border-b border-slate-100 p-5 dark:border-slate-800">
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-sabahTeal dark:text-cyan-300">Keutamaan Tindakan</p>
-          <h2 class="mt-1 text-2xl font-black text-slate-950 dark:text-white">Senarai KPI memerlukan perhatian</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Disusun berdasarkan jurang pencapaian negeri berbanding sasaran. KPI jumlah/bilangan dipaparkan sebagai konteks, bukan prestasi sasaran.</p>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-slate-100 text-sm dark:divide-slate-800">
-            <thead class="bg-slate-50 text-xs uppercase tracking-[0.12em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
-              <tr>
-                <th class="px-5 py-4 text-left font-black">Bil.</th>
-                <th class="px-5 py-4 text-left font-black">KPI</th>
-                <th class="px-5 py-4 text-right font-black">Sabah</th>
-                <th class="px-5 py-4 text-right font-black">Sasaran</th>
-                <th class="px-5 py-4 text-left font-black">Status</th>
-              </tr>
-            </thead>
-            <tbody id="riskTable" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
-          </table>
-        </div>
-      </article>
-
-      <aside class="print-card rounded-[1.6rem] border border-white/70 bg-slate-950 p-5 text-white shadow-panel dark:border-slate-800">
-        <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">Panduan Interpretasi &amp; Tindakan</p>
-        <h3 class="mt-1 text-xl font-black">Daripada Data Kepada Tindakan</h3>
-        <div class="mt-5 space-y-4 text-sm leading-6 text-slate-300">
-          <p><span class="font-black text-white">1.</span> Semak ringkasan negeri terlebih dahulu: bilangan KPI capai sasaran, KPI perlu perhatian dan tarikh kemas kini data.</p>
-          <p><span class="font-black text-white">2.</span> Klik KPI card untuk mengenal pasti kawasan terbaik, kawasan berisiko dan jurang berbanding sasaran.</p>
-          <p><span class="font-black text-white">3.</span> Gunakan jadual keutamaan sebagai asas tindakan susulan, perbincangan kawasan dan pemantauan penambahbaikan.</p>
-        </div>
-        <div class="mt-6 rounded-3xl bg-white/10 p-4">
-          <p class="text-xs font-black uppercase tracking-[0.16em] text-cyan-300">Nota Penting</p>
-          <p class="mt-2 text-sm leading-6 text-slate-300">Tafsiran prestasi perlu mengambil kira konteks operasi, liputan perkhidmatan, kapasiti tenaga kerja, kualiti data dan faktor program setempat.</p>
-        </div>
-      </aside>
-    </section>
+    
   </main>
 
   <footer class="mt-10 border-t border-white/60 bg-white/75 py-8 text-center text-sm font-semibold text-slate-500 backdrop-blur dark:border-slate-800 dark:bg-slate-950/75 dark:text-slate-400">
@@ -800,8 +761,7 @@
       renderSummaryCards();
       renderSectionTabs();
       renderKpiPicker();
-      renderKpiCards();
-      renderRiskTable();
+      renderKpiCards();      
       renderTrendKpiBar();
       renderTrendKpiSelect();
       renderCharts();
@@ -911,103 +871,8 @@
       });
     }
 
-    function suggestedAction(status, kpi) {
-      if (!kpi || !Number.isFinite(kpi.target)) return 'Paparan konteks sahaja';
-      if (status.color === 'emerald') return 'Kekalkan prestasi dan dokumentasi';
-      if (status.color === 'amber') return 'Pantau rapat sehingga capai sasaran';
-      if (status.color === 'red') return kpi.lowerBetter ? 'Kurangkan nilai melalui intervensi bersasar' : 'Tindakan pembetulan bersasar';
-      return 'Semak kelengkapan data';
-    }
 
-    function renderRiskTable() {
-      const body = document.getElementById('riskTable');
-      if (!body) return;
-
-      const rows = getAllKpis()
-        .map(function(item) {
-          return Object.assign({}, item, { status: getStatus(item.kpi) });
-        })
-        .filter(function(item) {
-          return Number.isFinite(item.kpi.target) && Number.isFinite(item.kpi.values.SBH);
-        })
-        .sort(function(a, b) {
-          return b.status.severity - a.status.severity;
-        })
-        .slice(0, 12)
-        .map(function(item, idx) {
-          return Object.assign({}, item, { priorityRank: idx + 1 });
-        });
-
-      if (!rows.length) {
-        body.innerHTML = `
-          <tr>
-            <td colspan="5" class="px-5 py-8 text-center font-bold text-slate-500">
-              Tiada KPI bersasaran untuk dipaparkan.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      const grouped = {};
-
-      rows.forEach(function(item) {
-        const category = item.section && item.section.name ? item.section.name : 'Lain-lain';
-        if (!grouped[category]) grouped[category] = [];
-        grouped[category].push(item);
-      });
-
-      let html = '';
-
-      Object.keys(grouped).forEach(function(category) {
-        const items = grouped[category];
-
-        html += `
-          <tr class="bg-slate-100/80 dark:bg-slate-900">
-            <td colspan="5" class="px-5 py-3">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="text-xs font-black uppercase tracking-[0.16em] text-sabahTeal dark:text-cyan-300">
-                  ${safeText(category)}
-                </span>
-                <span class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-black text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
-                  ${items.length} KPI
-                </span>
-              </div>
-            </td>
-          </tr>
-        `;
-
-        items.forEach(function(item) {
-          html += `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
-              <td class="px-5 py-4 align-top font-black text-slate-400 dark:text-slate-500">
-                #${item.priorityRank}
-              </td>
-
-              <td class="px-5 py-4 align-top font-extrabold text-slate-900 dark:text-white">
-                ${safeText(item.kpi.label)}
-              </td>
-
-              <td class="px-5 py-4 align-top text-right font-black">
-                ${formatValue(item.kpi.values.SBH, item.kpi)}
-              </td>
-
-              <td class="px-5 py-4 align-top text-right font-black">
-                ${formatValue(item.kpi.target, item.kpi)}
-              </td>
-
-              <td class="px-5 py-4 align-top whitespace-nowrap">
-                <span class="inline-flex rounded-full border px-3 py-1 text-xs font-black ${statusClasses(item.status.color)}">
-                  ${safeText(item.status.label)}
-                </span>
-              </td>
-            </tr>
-          `;
-        });
-      });
-
-      body.innerHTML = html;
-    }
+    
 
     function normaliseForMatch(text) {
       return String(text || '')
